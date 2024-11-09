@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import {v4 as uuidv4} from 'uuid'
 
 const Signup = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
+    id: uuidv4(),
     name: '',
     username: '',
     email: '',
@@ -20,17 +22,22 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/users', form);
+      // Add the id to the form object before sending the request
+      const userForm = { ...form, id: uuidv4() };
+  
+      const response = await axios.post('http://localhost:3000/users', userForm);
       console.log(response.data);
+  
       if (response.status === 201) {
         alert('User created successfully');
-        setForm({ 'name': '', 'username': '', 'email': '', 'password': '' });
+        setForm({ id: '', name: '', username: '', email: '', password: '' });
         navigate('/login');
       }
     } catch (err) {
       console.error('Error creating user:', err);
     }
   };
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

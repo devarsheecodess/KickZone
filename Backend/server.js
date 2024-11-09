@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 
 // Signup
 app.post("/users", async (req, res) => {
-  const { name, username, email, password } = req.body;
+  const { id, name, username, email, password } = req.body;
 
   // Check if all fields are provided
   if (!name || !username || !email || !password) {
@@ -46,6 +46,7 @@ app.post("/users", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
+      id,
       name,
       username,
       email,
@@ -88,7 +89,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Send response with token and user details
-    res.json({ success: true });
+    res.json({ success: true , id: user.id});
   } catch (err) {
     console.error("Error during login:", err);
     res.status(500).json({ success: false, message: "An error occurred" });
@@ -133,6 +134,106 @@ app.get("/products", async (req, res) => {
     res.status(200).json(products);
   } catch (err) {
     res.status(500).json({ error: 'Server error', message: err.message });
+  }
+});
+
+// Fetch products on id
+app.get('/products-id', async (req, res) => {
+  const { id } = req.query;
+  try {
+    const product = await Product.findOne({ id: id });  // Use await to get the product
+    if (product) {
+      res.status(200).json(product);  // Return the product if found
+    } else {
+      res.status(404).json({ message: "Product not found" });  // Handle case where product is not found
+    }
+  } catch (err) {
+    console.error("Error server u:", err);
+    res.status(500).json({ error: "Server error" });  // Handle errors properly
+  }
+});
+
+// Add to cart
+app.post('/cart', async (req, res) => {
+  const { productId, userId, image, name, price } = req.body;
+
+  // Validate required fields
+  if (!productId || !userId || !image || !name || price === undefined) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    // Check if the product is already in the cart for the user
+    const exists = await Cart.findOne({ userId, productId });
+
+    if (exists) {
+      // If the item exists, increment the quantity
+      const updateResult = await Cart.updateOne(
+        { userId, productId },
+        { $inc: { quantity: 1 } }
+      );
+
+      if (updateResult.nModified === 0) {
+        return res.status(400).json({ message: "Failed to update quantity" });
+      }
+
+      return res.status(200).json({ message: "Quantity updated in cart", productId, updatedCart: exists });
+    }
+
+    // If the item doesn't exist in the cart, create a new cart item
+    const newCart = new Cart({
+      userId,
+      productId,
+      image,
+      name,
+      price,
+      quantity: 1  // Set initial quantity to 1
+    });
+
+    // Save the new cart item to the database
+    await newCart.save();
+    res.status(201).json({ message: "Item added to cart", cart: newCart });
+  } catch (err) {
+    console.error("Error adding item to cart:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+
+// Get cart items
+app.get('/cart', async (req, res) => {
+  const { userId } = req.query;
+  try {
+    // Populate product details (name and price) using productId
+    const cartItems = await Cart.find({ userId })
+      .populate('productId', 'name price'); // Assuming productId is a reference to Product model
+
+    if (cartItems.length > 0) {
+      res.status(200).json(cartItems); // Return cart items with populated product details
+    } else {
+      res.status(404).json([]);
+    }
+  } catch (err) {
+    console.error("Error fetching cart items:", err);
+    res.status(500).json([]);
+  }
+});
+
+// Delete cart items
+app.delete('/cart', async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const deleteResult = await Cart.deleteOne({ id: id });
+
+    if (deleteResult.deletedCount === 0) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    res.status(200).json({ message: "Cart item deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting cart item:", err);
+    res.status(500).json({ error: "Server error", details: err.message }); 
   }
 });
 

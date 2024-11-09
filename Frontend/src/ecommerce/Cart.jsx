@@ -4,35 +4,66 @@ import axios from 'axios';
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [products, setProducts] = useState([]);
 
-    // Fetch cart items from backend
-    useEffect(() => {
-        const fetchCartItems = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/cart'); // Backend endpoint to fetch cart items
-                setCartItems(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching cart items:', error);
-                setLoading(false);
+    const fetchCartItems = async () => {
+        setLoading(true);
+        try {
+            const userID = localStorage.getItem('id');
+            console.log(userID); // Log the user ID
+
+
+            const response = await axios.get('http://localhost:3000/cart', { params: { userId: userID } });
+
+            if (response.data && response.data.length > 0) {
+                // Map the response to include product details (name, price, quantity)
+                const productDetailsArray = response.data.map(item => {
+                    return {
+                        productId: item.productId, // Product ID (unique identifier)
+                        name: item.name, // Name of the product
+                        price: item.price, // Price of the product
+                        quantity: item.quantity // Quantity in cart
+                    };
+                });
+
+                console.log(productDetailsArray);
+                setCartItems(productDetailsArray); // Set state with product details
+            } else {
+                console.log('No cart items found for this user.');
+                setCartItems([]);  // Set an empty array if no items are found
             }
-        };
+        } catch (error) {
+            console.error('Error fetching cart items:', error.message || error);
+        } finally {
+            setLoading(false);  // Ensure loading is set to false after fetch attempt
+        }
+    };
+
+    const deleteItem = async (itemId) => {
+        try {
+            const confirmDelete = confirm("Are you sure you want to delete this item from your cart?");
+            if (!confirmDelete) {
+                return;
+            }
+
+            const response = await axios.delete(`http://localhost:3000/cart`, { params: itemId });
+
+            if (response.status === 200) {
+                alert("Item deleted successfully!");
+                fetchCartItems();
+            }
+        } catch (err) {
+            console.error("Error deleting item:", err.response ? err.response.data : err.message);
+            alert("Failed to delete item from cart. Please try again.");
+        }
+    };
+
+    useEffect(() => {
         fetchCartItems();
     }, []);
 
     // Calculate total price
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-    // Handle remove item from cart
-    const handleRemoveItem = async (id) => {
-        try {
-            // Make a backend call to remove the item from the cart
-            await axios.delete(`http://localhost:3000/cart/${id}`); // Assuming DELETE request to remove item
-            setCartItems(cartItems.filter(item => item.id !== id));
-        } catch (err) {
-            console.log("Error removing item:", err);
-        }
-    };
 
     if (loading) {
         return <div>Loading...</div>; // Add a loading state
@@ -54,22 +85,15 @@ const Cart = () => {
                     <div>
                         <div className="space-y-6">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="flex items-center justify-between p-4 border-b">
-                                    <div className="flex items-center">
-                                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
-                                        <div className="ml-4">
-                                            <p className="text-lg font-semibold">{item.name}</p>
-                                            <p className="text-sm text-gray-500">Price: ${item.price}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <p className="mr-4">Qty: {item.quantity}</p>
-                                        <button
-                                            onClick={() => handleRemoveItem(item.id)}
-                                            className="text-red-500 hover:text-red-700"
-                                        >
-                                            Remove
-                                        </button>
+                                <div key={item.productId} className="flex items-center justify-between p-4 border-b">
+                                    <div>
+                                        {/* Display product name */}
+                                        <h1 className="text-lg font-semibold">{item.name}</h1>
+                                        {/* Display price */}
+                                        <p className="text-gray-500">Price: ${item.price}</p>
+                                        {/* Display quantity */}
+                                        <p className="text-gray-500">Quantity: {item.quantity}</p>
+                                        <button onClick={() => { deleteItem(item.id) }} className='bg-red-500 text-black p-3'>Delete</button>
                                     </div>
                                 </div>
                             ))}
