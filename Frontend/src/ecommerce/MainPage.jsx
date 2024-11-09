@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 const MainPage = () => {
   const [tickets, setTickets] = useState([]);
@@ -15,7 +15,7 @@ const MainPage = () => {
       console.error('Error fetching tickets:', err);
     }
   }
-  
+
   const fetchMerch = async () => {
     try {
       const response = await axios.get('http://localhost:3000/products', { params: { type: 'merch' } });
@@ -24,18 +24,18 @@ const MainPage = () => {
       console.error('Error fetching merch:', err);
     }
   }
-  
+
   const addToCart = async (productId) => {
     try {
       // Fetch product details
       const productDetailsResponse = await axios.get('http://localhost:3000/products-id', { params: { id: productId } });
       const productDetails = productDetailsResponse.data;
       console.log(productDetails)
-  
+
       if (!productDetails) {
         throw new Error("Product not found.");
       }
-  
+
       // Prepare the cart item data
       const newCartItem = {
         id: uuidv4(),  // Generate a unique ID for the cart item
@@ -46,12 +46,12 @@ const MainPage = () => {
         price: productDetails.price,
         image: productDetails.image,  // Assuming these fields exist
       };
-  
+
       console.log(newCartItem);
-  
+
       // Add the product to the cart in the DB
       const response = await axios.post('http://localhost:3000/cart', newCartItem);
-  
+
       if (response.status === 201) { // Check for 201 Created
         alert("Product added to the cart!");
       }
@@ -60,8 +60,8 @@ const MainPage = () => {
       alert("Failed to add product to cart. Please try again."); // User-friendly error message
     }
   };
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     fetchTickets()
     fetchMerch()
   }, [])
@@ -91,8 +91,8 @@ const MainPage = () => {
               <div key={product.id} className="bg-white/20 backdrop-blur-lg rounded-lg p-4 text-center border border-white/20 shadow-md">
                 <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4" />
                 <h3 className="text-xl font-semibold text-gray-200">{product.name}</h3>
-                <p className="text-gray-400">Price: ${product.price.toFixed(2)}</p>
-                <button onClick={()=>addToCart(product.id)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                <p className="text-gray-400">Price: ₹{product.price.toFixed(2)}</p>
+                <button onClick={() => addToCart(product.id)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                   Add to Cart
                 </button>
               </div>
@@ -108,8 +108,8 @@ const MainPage = () => {
               <div key={product.id} className="bg-white/20 backdrop-blur-lg rounded-lg p-4 text-center border border-white/20 shadow-md">
                 <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4" />
                 <h3 className="text-xl font-semibold text-gray-200">{product.name}</h3>
-                <p className="text-gray-400">Price: ${product.price.toFixed(2)}</p>
-                <button onClick={()=>addToCart(product.id)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                <p className="text-gray-400">Price: ₹{product.price.toFixed(2)}</p>
+                <button onClick={() => addToCart(product.id)} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                   Add to Cart
                 </button>
               </div>

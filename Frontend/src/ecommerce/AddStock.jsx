@@ -57,7 +57,7 @@ const AddStock = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       console.log(product)
       const response = await axios.post('http://localhost:3000/products', product);
@@ -91,7 +91,7 @@ const AddStock = () => {
         <h2 className="text-2xl font-bold mb-4">Add Product</h2>
         {error && <div className="text-red-500">{error}</div>}
         {success && <div className="text-green-500">{success}</div>}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block font-semibold mb-2">Product Name</label>
@@ -132,7 +132,7 @@ const AddStock = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block font-semibold mb-2">Product Price ($)</label>
+            <label className="block font-semibold mb-2">Product Price (₹)</label>
             <input
               type="number"
               name="price"

@@ -48,7 +48,7 @@ const Home = () => {
   return (
     <div className="absolute inset-0 -z-20 w-full min-h-screen bg-transparent bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] flex flex-col items-center p-4">
       <div className="w-full max-w-5xl mt-20 space-y-10 flex-1">
-        
+
         {/* Upcoming Matches Slider */}
         <section className="w-full bg-blue-600 text-center text-white py-20 text-3xl font-bold rounded-lg shadow-lg">
           <h2 className="mb-5">Upcoming Matches</h2>
@@ -64,7 +64,7 @@ const Home = () => {
             ))}
           </Swiper>
         </section>
-        
+
         {/* Predictions Slider */}
         <section className="w-full bg-red-600 text-center text-black py-20 text-3xl font-bold rounded-lg shadow-lg justify-between h-auto">
           <h2 className="mb-5">Predictions</h2>
@@ -79,7 +79,7 @@ const Home = () => {
                     <div className="w-full bg-gray-200 rounded-full h-4">
                       <div
                         className="bg-green-500 h-4 rounded-full"
-                        style={{ width: `${prediction.winProbability}%` }}
+                        style={{ width: `₹{prediction.winProbability}%` }}
                       ></div>
                     </div>
                     <p className="mt-2 text-gray-700">Win Probability: {prediction.winProbability}%</p>
@@ -92,8 +92,8 @@ const Home = () => {
       </div>
 
       {/* Live Chat Circle Button */}
-      <div 
-        onClick={handleChatClick} 
+      <div
+        onClick={handleChatClick}
         className="fixed bottom-10 right-10 w-16 h-16 bg-black text-red-600 flex items-center justify-center rounded-full cursor-pointer text-sm hover: font-bold">
         Live Chat
       </div>

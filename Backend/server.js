@@ -12,6 +12,7 @@ app.use(cors());
 const User = require("./Models/User"); // Assuming you have a User model
 const Product = require("./Models/Product");
 const Cart = require("./Models/Cart");
+const Orders = require("./Models/Orders");
 
 // dotenv config
 dotenv.config();
@@ -89,7 +90,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Send response with token and user details
-    res.json({ success: true , id: user.id});
+    res.json({ success: true, id: user.id });
   } catch (err) {
     console.error("Error during login:", err);
     res.status(500).json({ success: false, message: "An error occurred" });
@@ -137,19 +138,19 @@ app.get("/products", async (req, res) => {
   }
 });
 
-// Fetch products on id
+// Fetch products by id
 app.get('/products-id', async (req, res) => {
   const { id } = req.query;
   try {
-    const product = await Product.findOne({ id: id });  // Use await to get the product
+    const product = await Product.findOne({ id: id });
     if (product) {
-      res.status(200).json(product);  // Return the product if found
+      res.status(200).json(product);
     } else {
-      res.status(404).json({ message: "Product not found" });  // Handle case where product is not found
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (err) {
-    console.error("Error server u:", err);
-    res.status(500).json({ error: "Server error" });  // Handle errors properly
+    console.error("Error fetching product:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -177,7 +178,7 @@ app.post('/cart', async (req, res) => {
         return res.status(400).json({ message: "Failed to update quantity" });
       }
 
-      return res.status(200).json({ message: "Quantity updated in cart", productId, updatedCart: exists });
+      return res.status(200).json({ message: "Quantity updated in cart", updatedCart: exists });
     }
 
     // If the item doesn't exist in the cart, create a new cart item
@@ -199,17 +200,15 @@ app.post('/cart', async (req, res) => {
   }
 });
 
-
 // Get cart items
 app.get('/cart', async (req, res) => {
   const { userId } = req.query;
   try {
-    // Populate product details (name and price) using productId
     const cartItems = await Cart.find({ userId })
-      .populate('productId', 'name price'); // Assuming productId is a reference to Product model
+      .populate('productId', 'name price'); // Populate product details
 
     if (cartItems.length > 0) {
-      res.status(200).json(cartItems); // Return cart items with populated product details
+      res.status(200).json(cartItems); // Return populated cart items
     } else {
       res.status(404).json([]);
     }
@@ -233,7 +232,44 @@ app.delete('/cart', async (req, res) => {
     res.status(200).json({ message: "Cart item deleted successfully" });
   } catch (err) {
     console.error("Error deleting cart item:", err);
-    res.status(500).json({ error: "Server error", details: err.message }); 
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+// Payment integration
+app.post('/api/process-payment', (req, res) => {
+  const { paymentData } = req.body;
+
+  // Log payment data for now (or process with a payment gateway)
+  console.log('Payment Data:', paymentData);
+
+  // Simulate success response
+  res.json({ status: 'success', message: 'Payment processed in Test Mode.' });
+});
+
+// Add orders
+app.post('/orders', (req, res) => {
+  const { id, userId, productId, date } = req.body;
+
+  if (!id || !userId || !productId || !date) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    const newOrder = {
+      id,
+      userId,
+      productId,
+      date: new Date(date), // Convert date string to Date object
+    };
+
+    orders.push(newOrder);
+
+    // Respond with the created order
+    res.status(201).json(newOrder);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred while creating the order' });
   }
 });
 

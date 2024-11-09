@@ -13,7 +13,6 @@ const Header = () => {
         <a href="/home" className="hover:underline">Back to KickZone</a>
         <a href="/store" className="hover:underline">Shop</a>
         <a href="/cart" className="hover:underline">Cart</a>
-        <a href="/profile" className="hover:underline">Profile</a>
       </nav>
     </header>
   );
