@@ -52,7 +52,7 @@ const MainPage = () => {
       // Add the product to the cart in the DB
       const response = await axios.post('http://localhost:3000/cart', newCartItem);
 
-      if (response.status === 201) { // Check for 201 Created
+      if (response.status === 201 || response.status === 200) { // Check for 201 Created
         alert("Product added to the cart!");
       }
     } catch (err) {
@@ -77,9 +77,6 @@ const MainPage = () => {
         <section className="w-full text-center py-20 px-6 bg-opacity-75 backdrop-blur-md">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Welcome to KickStore</h1>
           <p className="text-lg md:text-2xl text-gray-200 mb-6">Your one-stop shop for all football tickets and merchandise.</p>
-          <button className="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition">
-            Shop Now
-          </button>
         </section>
 
         {/* Featured Products Section */}

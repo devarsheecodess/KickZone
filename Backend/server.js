@@ -273,19 +273,45 @@ app.post('/orders', (req, res) => {
   }
 });
 
-//Quiz
-const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
+// WebRTC
+const http = require("http");
+const socketIo = require("socket.io");
 
-app.post('/api/generate', async (req, res) => {
-    const { prompt } = req.body;
-    try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const result = await model.generateContent(prompt);
-        res.json({ text: result.response.text() });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to generate content' });
-    }
+const server = http.createServer(app); // Create an HTTP server using Express
+const io = socketIo(server); // Set up Socket.IO to work with the server
+
+app.use(express.static('public'));  // Serve the frontend from the 'public' folder
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Join a specific room
+  socket.on('join', (roomId) => {
+    socket.join(roomId);
+    console.log(`User joined room: ${roomId}`);
+  });
+
+  // Handle WebRTC offer from a user
+  socket.on('offer', (roomId, offer) => {
+    socket.to(roomId).emit('offer', offer);
+  });
+
+  // Handle WebRTC answer from a user
+  socket.on('answer', (roomId, answer) => {
+    socket.to(roomId).emit('answer', answer);
+  });
+
+  // Handle ICE candidate
+  socket.on('candidate', (roomId, candidate) => {
+    socket.to(roomId).emit('candidate', candidate);
+  });
+
+  // Handle disconnect
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
 });
+
 
 // Start the server
 const port = process.env.PORT || 3000;
