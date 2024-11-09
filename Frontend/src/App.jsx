@@ -14,7 +14,7 @@ import Home from './components/Page/Home';
 import Meet from './components/Page/Meet';
 import Polls from './components/Page/Polls';
 import Community from './components/Page/Community';
-import Games from './components/Page/Games';
+import Quiz from './components/Page/Quiz';
 import LiveChat from './components/Livechat';
 
 // Ecommerce Components
@@ -69,11 +69,11 @@ const AppRouter = () => (
         }
       />
       <Route
-        path="/games"
+        path="/quiz"
         element={
           <>
             <Header />
-            <Games />
+            <Quiz />
           </>
         }
       />

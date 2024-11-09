@@ -273,6 +273,20 @@ app.post('/orders', (req, res) => {
   }
 });
 
+//Quiz
+const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
+
+app.post('/api/generate', async (req, res) => {
+    const { prompt } = req.body;
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(prompt);
+        res.json({ text: result.response.text() });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to generate content' });
+    }
+});
+
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

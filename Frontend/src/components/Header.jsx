@@ -7,9 +7,8 @@ const Header = () => {
         <a href="./Home" className="hover:text-red-600 hover:underline">Home</a>
         <a href="/store" className="hover:text-red-600 hover:underline">Store</a>
         <a href="./Meet" className="hover:text-red-600 hover:underline">Meet</a>
-        <a href="./Community" className="hover:text-red-600 hover:underline">Community</a>
         <a href="./Polls" className="hover:text-red-600 hover:underline">Polls</a>
-        <a href="./Games" className="hover:text-red-600 hover:underline">Games</a>
+        <a href="./quiz" className="hover:text-red-600 hover:underline">Quiz</a>
       </nav>
     </header>
   );

@@ -1,0 +1,252 @@
+[
+    {
+      "question": "Who won the 2022 FIFA World Cup?",
+      "options": ["Argentina", "Brazil", "France", "Germany"],
+      "answer": "Argentina"
+    },
+    {
+      "question": "Which footballer is known as 'The Egyptian King'?",
+      "options": ["Mohamed Salah", "Cristiano Ronaldo", "Lionel Messi", "Neymar"],
+      "answer": "Mohamed Salah"
+    },
+    {
+      "question": "Which country hosted the 2018 FIFA World Cup?",
+      "options": ["Russia", "Brazil", "South Africa", "Qatar"],
+      "answer": "Russia"
+    },
+    {
+      "question": "Which footballer is known as 'CR7'?",
+      "options": ["Cristiano Ronaldo", "Kylian Mbappé", "Neymar", "Lionel Messi"],
+      "answer": "Cristiano Ronaldo"
+    },
+    {
+      "question": "Which country won the first ever FIFA World Cup?",
+      "options": ["Brazil", "Germany", "Italy", "Uruguay"],
+      "answer": "Uruguay"
+    },
+    {
+      "question": "Who is the all-time top scorer in the FIFA World Cup?",
+      "options": ["Marta", "Pele", "Cristiano Ronaldo", "Miroslav Klose"],
+      "answer": "Miroslav Klose"
+    },
+    {
+      "question": "Which football club does Lionel Messi currently play for?",
+      "options": ["Paris Saint-Germain", "Barcelona", "Manchester City", "Inter Miami"],
+      "answer": "Inter Miami"
+    },
+    {
+      "question": "In which year was the first FIFA World Cup held?",
+      "options": ["1920", "1924", "1930", "1934"],
+      "answer": "1930"
+    },
+    {
+      "question": "Which country has won the most FIFA World Cups?",
+      "options": ["Germany", "Italy", "Brazil", "Argentina"],
+      "answer": "Brazil"
+    },
+    {
+      "question": "Who is the captain of the Brazilian national football team?",
+      "options": ["Neymar", "Thiago Silva", "Casemiro", "Gabriel Jesus"],
+      "answer": "Neymar"
+    },
+    {
+      "question": "Which footballer is known as 'The Egyptian King'?",
+      "options": ["Mohamed Salah", "Cristiano Ronaldo", "Lionel Messi", "Neymar"],
+      "answer": "Mohamed Salah"
+    },
+    {
+      "question": "Which country hosted the 2006 FIFA World Cup?",
+      "options": ["Germany", "South Africa", "Brazil", "Italy"],
+      "answer": "Germany"
+    },
+    {
+      "question": "Who scored the winning goal in the 2014 World Cup final?",
+      "options": ["Mario Götze", "Lionel Messi", "Toni Kroos", "Thomas Müller"],
+      "answer": "Mario Götze"
+    },
+    {
+      "question": "Which footballer holds the record for the most goals scored in the UEFA Champions League?",
+      "options": ["Cristiano Ronaldo", "Lionel Messi", "Raul", "Robert Lewandowski"],
+      "answer": "Cristiano Ronaldo"
+    },
+    {
+      "question": "Which footballer won the Ballon d'Or in 2020?",
+      "options": ["Robert Lewandowski", "Lionel Messi", "Cristiano Ronaldo", "Kevin De Bruyne"],
+      "answer": "Robert Lewandowski"
+    },
+    {
+      "question": "Which country won the 2010 FIFA World Cup?",
+      "options": ["Netherlands", "Spain", "Germany", "Italy"],
+      "answer": "Spain"
+    },
+    {
+      "question": "Which team won the Premier League title in 2021?",
+      "options": ["Manchester City", "Liverpool", "Chelsea", "Manchester United"],
+      "answer": "Manchester City"
+    },
+    {
+      "question": "Who is the all-time top scorer in the English Premier League?",
+      "options": ["Sergio Agüero", "Wayne Rooney", "Harry Kane", "Alan Shearer"],
+      "answer": "Alan Shearer"
+    },
+    {
+      "question": "Which footballer is known as 'The Atomic Flea'?",
+      "options": ["Lionel Messi", "Neymar", "Cristiano Ronaldo", "Eden Hazard"],
+      "answer": "Lionel Messi"
+    },
+    {
+      "question": "Which country has the most Copa América titles?",
+      "options": ["Argentina", "Brazil", "Chile", "Uruguay"],
+      "answer": "Uruguay"
+    },
+    {
+      "question": "Which country won the 2002 FIFA World Cup?",
+      "options": ["Brazil", "Germany", "France", "Argentina"],
+      "answer": "Brazil"
+    },
+    {
+      "question": "Which footballer won the 2021 Ballon d'Or?",
+      "options": ["Lionel Messi", "Cristiano Ronaldo", "Robert Lewandowski", "Kylian Mbappé"],
+      "answer": "Lionel Messi"
+    },
+    {
+      "question": "Which club won the 2021 UEFA Champions League?",
+      "options": ["Manchester City", "Chelsea", "Bayern Munich", "Paris Saint-Germain"],
+      "answer": "Chelsea"
+    },
+    {
+      "question": "Which country won the 2016 UEFA European Championship?",
+      "options": ["France", "Portugal", "Germany", "Spain"],
+      "answer": "Portugal"
+    },
+    {
+      "question": "Which player holds the record for the most goals in a single World Cup?",
+      "options": ["Just Fontaine", "Miroslav Klose", "Pele", "Ronaldo Nazário"],
+      "answer": "Just Fontaine"
+    },
+    {
+      "question": "Who is the most expensive footballer of all time?",
+      "options": ["Neymar", "Kylian Mbappé", "Cristiano Ronaldo", "Lionel Messi"],
+      "answer": "Neymar"
+    },
+    {
+      "question": "Which footballer has the most appearances in the Premier League?",
+      "options": ["Ryan Giggs", "Frank Lampard", "Steven Gerrard", "Gareth Barry"],
+      "answer": "Gareth Barry"
+    },
+    {
+      "question": "Which footballer has scored the most goals in the World Cup?",
+      "options": ["Miroslav Klose", "Pele", "Ronaldo", "Gerd Müller"],
+      "answer": "Miroslav Klose"
+    },
+    {
+      "question": "Which country hosted the 2014 FIFA World Cup?",
+      "options": ["Brazil", "South Africa", "Germany", "Argentina"],
+      "answer": "Brazil"
+    },
+    {
+      "question": "Who is the captain of the French national football team?",
+      "options": ["Hugo Lloris", "Paul Pogba", "Kylian Mbappé", "Raphaël Varane"],
+      "answer": "Hugo Lloris"
+    },
+    {
+      "question": "Which country won the 1986 FIFA World Cup?",
+      "options": ["Argentina", "Brazil", "West Germany", "France"],
+      "answer": "Argentina"
+    },
+    {
+      "question": "Who scored the 'Hand of God' goal in the 1986 World Cup?",
+      "options": ["Diego Maradona", "Pele", "Michel Platini", "Zico"],
+      "answer": "Diego Maradona"
+    },
+    {
+      "question": "Which club does Kylian Mbappé currently play for?",
+      "options": ["Paris Saint-Germain", "Real Madrid", "Chelsea", "Liverpool"],
+      "answer": "Paris Saint-Germain"
+    },
+    {
+      "question": "Which country hosted the 1998 FIFA World Cup?",
+      "options": ["France", "Brazil", "Italy", "Germany"],
+      "answer": "France"
+    },
+    {
+      "question": "Which club did Zinedine Zidane play for in the 2002 UEFA Champions League final?",
+      "options": ["Real Madrid", "Juventus", "Barcelona", "Bayer Leverkusen"],
+      "answer": "Real Madrid"
+    },
+    {
+      "question": "Which country won the UEFA Euro 2000?",
+      "options": ["France", "Italy", "Netherlands", "Portugal"],
+      "answer": "France"
+    },
+    {
+      "question": "Which player is known as 'The Fenomeno'?",
+      "options": ["Ronaldo Nazário", "Ronaldinho", "Romário", "Kaká"],
+      "answer": "Ronaldo Nazário"
+    },
+    {
+      "question": "Which country hosted the 2022 FIFA World Cup?",
+      "options": ["Qatar", "Russia", "Brazil", "South Africa"],
+      "answer": "Qatar"
+    },
+    {
+      "question": "Which club is known as 'The Red Devils'?",
+      "options": ["Manchester United", "Liverpool", "Arsenal", "Chelsea"],
+      "answer": "Manchester United"
+    },
+    {
+      "question": "Who scored the most goals in the 2018 FIFA World Cup?",
+      "options": ["Harry Kane", "Kylian Mbappé", "Cristiano Ronaldo", "Romelu Lukaku"],
+      "answer": "Harry Kane"
+    },
+    {
+      "question": "Which footballer has won the most Ballon d'Or awards?",
+      "options": ["Lionel Messi", "Cristiano Ronaldo", "Michel Platini", "Johan Cruyff"],
+      "answer": "Lionel Messi"
+    },
+    {
+      "question": "Which country won the 1982 FIFA World Cup?",
+      "options": ["Italy", "Brazil", "Germany", "Argentina"],
+      "answer": "Italy"
+    },
+    {
+      "question": "Which player holds the record for the most goals scored in La Liga?",
+      "options": ["Lionel Messi", "Cristiano Ronaldo", "Karim Benzema", "Raul"],
+      "answer": "Lionel Messi"
+    },
+    {
+      "question": "Who is the highest-scoring English player in the Premier League?",
+      "options": ["Wayne Rooney", "Harry Kane", "Sergio Agüero", "Frank Lampard"],
+      "answer": "Harry Kane"
+    },
+    {
+      "question": "Which club is known as 'The Blues'?",
+      "options": ["Chelsea", "Manchester City", "Everton", "Arsenal"],
+      "answer": "Chelsea"
+    },
+    {
+      "question": "Which country won the 2000 UEFA Euro Championship?",
+      "options": ["France", "Italy", "Netherlands", "Spain"],
+      "answer": "France"
+    },
+    {
+      "question": "Who scored the famous 'No-look goal' against Arsenal in 2004?",
+      "options": ["Toni Kroos", "Ronaldinho", "Wayne Rooney", "Sergio Agüero"],
+      "answer": "Wayne Rooney"
+    },
+    {
+      "question": "Which player scored the fastest goal in World Cup history?",
+      "options": ["Hakan Şükür", "Giovanni van Bronckhorst", "Clint Dempsey", "Bert Patenaude"],
+      "answer": "Clint Dempsey"
+    },
+    {
+      "question": "Which country won the 1970 FIFA World Cup?",
+      "options": ["Brazil", "Italy", "Germany", "Argentina"],
+      "answer": "Brazil"
+    },
+    {
+      "question": "Which team has won the most Copa Libertadores titles?",
+      "options": ["Boca Juniors", "River Plate", "Flamengo", "São Paulo"],
+      "answer": "Boca Juniors"
+    }
+]  
