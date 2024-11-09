@@ -14,6 +14,13 @@ import Community from './components/Page/Community'
 import Games from './components/Page/Games'
 import LiveChat from './components/Livechat'
 
+// Ecommerce Components
+import EcomHeader from './ecommerce/Header'
+import MainPage from './ecommerce/MainPage'
+import AddStock from './ecommerce/AddStock'
+import Cart from './ecommerce/Cart'
+import Profile from './ecommerce/Profile'
+
 const AppRouter = () => (
   <Router>
     <Routes>
@@ -56,16 +63,22 @@ const AppRouter = () => (
           </>
         }
       />
-       <Route
+      <Route
         path="/games"
         element={
           <>
             <Header />
-            <Games/>
+            <Games />
           </>
         }
       />
       <Route path="/livechat" element={<div><Home/>< LiveChat/></div>}/>
+
+      {/* Ecommerce Routes */}
+      <Route path="/store" element={<div><EcomHeader/><MainPage/></div>} />
+      <Route path="/addStock" element={<div><AddStock/></div>} />
+      <Route path="/cart" element={<div><EcomHeader/><Cart/></div>} />
+      <Route path="/profile" element={<div><EcomHeader/><Profile/></div>} />
     </Routes>
   </Router>
 )
