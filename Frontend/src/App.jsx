@@ -20,6 +20,7 @@ import MainPage from './ecommerce/MainPage'
 import AddStock from './ecommerce/AddStock'
 import Cart from './ecommerce/Cart'
 import Profile from './ecommerce/Profile'
+import Form from './components/Form'
 
 const AppRouter = () => (
   <Router>
@@ -27,6 +28,7 @@ const AppRouter = () => (
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/form" element={<Form />} />
       <Route
         path="/home"
         element={

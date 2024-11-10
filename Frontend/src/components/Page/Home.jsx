@@ -46,16 +46,18 @@ const Home = () => {
   };
 
   return (
-    <div className="absolute inset-0 -z-20 w-full min-h-screen bg-transparent bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] flex flex-col items-center p-4">
+    <div className="absolute top-0 left-0 -z-20 w-full min-h-screen bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] flex flex-col items-center p-4">
+
+    {/* Red background container */}
       <div className="w-full max-w-5xl mt-20 space-y-10 flex-1">
         
         {/* Upcoming Matches Slider */}
-        <section className="w-full bg-blue-600 text-center text-white py-20 text-3xl font-bold rounded-lg shadow-lg">
+        <section className="w-full bg-blue-800 border-4 border-yellow-600 text-center text-white py-20 text-3xl font-bold rounded-lg shadow-lg">
           <h2 className="mb-5">Upcoming Matches</h2>
           <Swiper {...swiperSettings}>
             {upcomingMatches.map((match) => (
               <SwiperSlide key={match.id}>
-                <div className="bg-white text-black p-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-2">
+               <div className="bg-white border-4 border-yellow-600 text-black p-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-2 bg-transparent">
                   <h3 className="text-xl font-semibold">{match.teams}</h3>
                   <p className="mt-2">{match.date}</p>
                   <p>{match.time}</p>
@@ -66,12 +68,12 @@ const Home = () => {
         </section>
         
         {/* Predictions Slider */}
-        <section className="w-full bg-red-600 text-center text-black py-20 text-3xl font-bold rounded-lg shadow-lg justify-between h-auto">
-          <h2 className="mb-5">Predictions</h2>
+        <section className="w-full bg-red-800 border-4 border-yellow-600 text-center text-black py-20 text-3xl font-bold rounded-lg shadow-lg justify-between h-auto">
+          <h2 className="mb-5 text-white">Predictions</h2>
           <Swiper {...swiperSettings}>
             {predictions.map((prediction) => (
               <SwiperSlide key={prediction.id}>
-                <div className="bg-white text-black p-6 rounded-lg shadow-lg transition-transform transform  Stranslate-y-2">
+                <div className="bg-white border-4 border-yellow-600 text-black p-6 rounded-lg shadow-lg transition-transform transform  Stranslate-y-2 ">
                   <h3 className="text-xl font-semibold">Prediction</h3>
                   <p className="mt-2">{prediction.prediction}</p>
                   <p className="text-sm text-gray-600">Accuracy: {prediction.accuracy}</p>
@@ -94,8 +96,8 @@ const Home = () => {
       {/* Live Chat Circle Button */}
       <div 
         onClick={handleChatClick} 
-        className="fixed bottom-10 right-10 w-16 h-16 bg-black text-red-600 flex items-center justify-center rounded-full cursor-pointer text-sm hover: font-bold">
-        Live Chat
+        className="fixed bottom-10 right-10 w-16 h-16 bg-black text-red-600  border-4 border-yellow-600 flex items-center justify-center rounded-full cursor-pointer text-sm hover: font-bold">
+        LC
       </div>
     </div>
   );

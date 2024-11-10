@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import axios from 'axios';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -37,52 +37,56 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
-        <h1 className="text-2xl font-semibold mb-6 text-center">Signup</h1>
+    <div className="relative flex items-center justify-center h-screen">
+      {/* Background Gradient */}
+      <div className="absolute top-0 left-0 -z-20 w-full min-h-screen bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
+
+      {/* Signup Box with yellow border glow */}
+      <div className="bg-red-800 p-8 rounded-lg shadow-lg max-w-sm w-full text-black border-4 border-yellow-600">
+        <h1 className="text-2xl font-semibold mb-6 text-center text-white">Signup</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700">Name</label>
+            <label className="block text-white">Name</label>
             <input
               type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500"
               placeholder="Enter your name"
             />
           </div>
           <div>
-            <label className="block text-gray-700">Username</label>
+            <label className="block text-white">Username</label>
             <input
               type="text"
               name="username"
               value={form.username}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500"
               placeholder="Choose a username"
             />
           </div>
           <div>
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-white">Email</label>
             <input
               type="email"
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500"
               placeholder="Enter your email"
             />
           </div>
           <div className="relative">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-white">Password</label>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500 pr-10"
               placeholder="Create a password"
             />
             <button
@@ -100,14 +104,14 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
+            className="w-full bg-indigo-800 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
           >
             Sign Up
           </button>
 
-          <p className="text-center text-gray-600 mt-4">
+          <p className="text-center text-white mt-4">
             Already have an account?{' '}
-            <Link to="/login" className="text-indigo-500 font-semibold hover:underline">
+            <Link to="/login" className="text-white font-semibold hover:underline">
               Sign In
             </Link>
           </p>
