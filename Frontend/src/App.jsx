@@ -18,10 +18,12 @@ import Quiz from './components/Page/Quiz';
 import LiveChat from './components/Livechat';
 
 // Ecommerce Components
-import EcomHeader from './ecommerce/Header';
-import MainPage from './ecommerce/MainPage';
-import AddStock from './ecommerce/AddStock';
-import Cart from './ecommerce/Cart';
+import EcomHeader from './ecommerce/Header'
+import MainPage from './ecommerce/MainPage'
+import AddStock from './ecommerce/AddStock'
+import Cart from './ecommerce/Cart'
+import Profile from './ecommerce/Profile'
+import Form from './components/Form'
 import GooglePayButton from './ecommerce/GooglePayButton';
 
 const AppRouter = () => (
@@ -30,6 +32,7 @@ const AppRouter = () => (
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/form" element={<Form />} />
 
       {/* Routes with Header */}
       <Route
