@@ -2,7 +2,7 @@
 const WebSocket = require('ws');
 
 // Create a WebSocket server listening on port 5000
-const wss = new WebSocket.Server({ port: 5000 });
+const wss = new WebSocket.Server({ port: 5002 });
 
 let polls = {}; // Store polls and their votes
 

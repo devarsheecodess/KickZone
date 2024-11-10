@@ -9,18 +9,28 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules"; // Import dir
 
 // Data for upcoming matches
 const upcomingMatches = [
-  { id: 1, teams: "Team A vs Team B", date: "Nov 15, 2024", time: "6:00 PM" },
-  { id: 2, teams: "Team C vs Team D", date: "Nov 16, 2024", time: "8:00 PM" },
-  { id: 3, teams: "Team E vs Team F", date: "Nov 18, 2024", time: "5:00 PM" },
-  { id: 4, teams: "Team G vs Team H", date: "Nov 20, 2024", time: "7:00 PM" },
+  { id: 1, teams: "Nottingham Forest vs Newcastle", date: "Nov 11, 2024", time: "6:00 PM" },
+  { id: 2, teams: "Chelsea vs FC Noah", date: "Nov 11, 2024", time: "1:30 AM" },
+  { id: 3, teams: "Bodo/Glimt vs FK Qarabag", date: "Nov 10, 2024", time: "11:15 PM" },
+  { id: 4, teams: "Eintracht Frankfurt vs Slavia Prague", date: "Nov 10, 2024", time: "11:15 PM" },
+  { id: 5, teams: "FCSB vs FC Midtjylland", date: "Nov 10, 2024", time: "11:15 PM" },
+  { id: 6, teams: "Galatasaray vs Tottenham Hotspur", date: "Nov 10, 2024", time: "11:15 PM" },
+  { id: 7, teams: "Betis vs Celta Vigo", date: "Nov 16, 2024", time: "8:00 PM" },
+  { id: 8, teams: "M.City vs Man Utd", date: "Nov 18, 2024", time: "5:00 PM" },
+  { id: 9, teams: "Roma vs Inter Milan", date: "Nov 20, 2024", time: "7:00 PM" }
 ];
 
 // Data for predictions with win probabilities
 const predictions = [
-  { id: 1, prediction: "Team A will win by 2 goals", accuracy: "75%", winProbability: 75 },
-  { id: 2, prediction: "Team D has a strong chance to win", accuracy: "82%", winProbability: 82 },
-  { id: 3, prediction: "Team E likely to lead in first half", accuracy: "60%", winProbability: 60 },
-  { id: 4, prediction: "High probability of a draw between Team G and H", accuracy: "68%", winProbability: 68 },
+  { id: 1, prediction: "Nottingham Forest will win by 1 goal", accuracy: "70%", winProbability: 70 },
+  { id: 2, prediction: "Chelsea has a strong chance to win against FC Noah", accuracy: "75%", winProbability: 75 },
+  { id: 3, prediction: "Bodo/Glimt likely to win against FK Qarabag", accuracy: "65%", winProbability: 65 },
+  { id: 4, prediction: "Eintracht Frankfurt expected to win against Slavia Prague", accuracy: "68%", winProbability: 68 },
+  { id: 5, prediction: "FCSB vs FC Midtjylland is likely to end in a draw", accuracy: "60%", winProbability: 60 },
+  { id: 6, prediction: "Galatasaray will likely defeat Tottenham Hotspur", accuracy: "72%", winProbability: 72 },
+  { id: 7, prediction: "Betis will win against Celta Vigo", accuracy: "78%", winProbability: 78 },
+  { id: 8, prediction: "M.City favored to lead against Man Utd", accuracy: "80%", winProbability: 80 },
+  { id: 9, prediction: "Roma vs Inter is likely to end in a draw", accuracy: "65%", winProbability: 65 }
 ];
 
 const Home = () => {

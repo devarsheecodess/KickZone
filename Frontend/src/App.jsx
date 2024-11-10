@@ -22,9 +22,10 @@ import EcomHeader from './ecommerce/Header'
 import MainPage from './ecommerce/MainPage'
 import AddStock from './ecommerce/AddStock'
 import Cart from './ecommerce/Cart'
-import Profile from './ecommerce/Profile'
+// Removed Profile since it has been deleted
 import Form from './components/Form'
 import GooglePayButton from './ecommerce/GooglePayButton';
+import Recommendations from './components/Page/Recommendations';
 
 const AppRouter = () => (
   <Router>
@@ -59,6 +60,15 @@ const AppRouter = () => (
           <>
             <Header />
             <Community />
+          </>
+        }
+      />
+      <Route
+        path="/recommendations"
+        element={
+          <>
+            <Header />
+            <Recommendations />
           </>
         }
       />

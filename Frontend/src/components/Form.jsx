@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 const FavoriteForm = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    favoriteFootballer: '',
-    favoriteFootballClub: ''
+    favPlayer: '',
+    favClub: ''
   });
 
   const handleChange = (e) => {
@@ -18,12 +18,13 @@ const FavoriteForm = () => {
     e.preventDefault();
     try {
       // Replace with your API endpoint
-      const response = await axios.post('http://localhost:3000/favorites', form);
+      console.log(form)
+      const response = await axios.post('http://localhost:3000/recommendations', form);
       console.log(response.data);
       if (response.status === 201) {
         alert('Favorites saved successfully');
-        setForm({ favoriteFootballer: '', favoriteFootballClub: '' });
-        navigate('/'); // Navigate to the landing page after saving
+        setForm({ favPlayer: '', favClub: '' });
+        navigate('/login'); // Navigate to the landing page after saving
       }
     } catch (err) {
       console.error('Error saving favorites:', err);
@@ -40,8 +41,8 @@ const FavoriteForm = () => {
           <label className="block text-white">Favorite Footballer</label>
           <input
             type="text"
-            name="favoriteFootballer"
-            value={form.favoriteFootballer}
+            name="favPlayer"
+            value={form.favPlayer}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500"
             placeholder="Enter your favorite footballer"
@@ -51,8 +52,8 @@ const FavoriteForm = () => {
           <label className="block text-white">Favorite Football Club</label>
           <input
             type="text"
-            name="favoriteFootballClub"
-            value={form.favoriteFootballClub}
+            name="favClub"
+            value={form.favClub}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500"
             placeholder="Enter your favorite football club"
