@@ -12,6 +12,7 @@ app.use(cors());
 const User = require("./Models/User"); // Assuming you have a User model
 const Product = require("./Models/Product");
 const Cart = require("./Models/Cart");
+const Orders = require("./Models/Orders");
 
 // dotenv config
 dotenv.config();
@@ -33,7 +34,7 @@ app.get("/", (req, res) => {
 
 // Signup
 app.post("/users", async (req, res) => {
-  const { name, username, email, password } = req.body;
+  const { id, name, username, email, password } = req.body;
 
   // Check if all fields are provided
   if (!name || !username || !email || !password) {
@@ -46,6 +47,7 @@ app.post("/users", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
+      id,
       name,
       username,
       email,
@@ -88,7 +90,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Send response with token and user details
-    res.json({ success: true });
+    res.json({ success: true, id: user.id });
   } catch (err) {
     console.error("Error during login:", err);
     res.status(500).json({ success: false, message: "An error occurred" });
@@ -135,6 +137,181 @@ app.get("/products", async (req, res) => {
     res.status(500).json({ error: 'Server error', message: err.message });
   }
 });
+
+// Fetch products by id
+app.get('/products-id', async (req, res) => {
+  const { id } = req.query;
+  try {
+    const product = await Product.findOne({ id: id });
+    if (product) {
+      res.status(200).json(product);
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (err) {
+    console.error("Error fetching product:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Add to cart
+app.post('/cart', async (req, res) => {
+  const { productId, userId, image, name, price } = req.body;
+
+  // Validate required fields
+  if (!productId || !userId || !image || !name || price === undefined) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    // Check if the product is already in the cart for the user
+    const exists = await Cart.findOne({ userId, productId });
+
+    if (exists) {
+      // If the item exists, increment the quantity
+      const updateResult = await Cart.updateOne(
+        { userId, productId },
+        { $inc: { quantity: 1 } }
+      );
+
+      if (updateResult.nModified === 0) {
+        return res.status(400).json({ message: "Failed to update quantity" });
+      }
+
+      return res.status(200).json({ message: "Quantity updated in cart", updatedCart: exists });
+    }
+
+    // If the item doesn't exist in the cart, create a new cart item
+    const newCart = new Cart({
+      userId,
+      productId,
+      image,
+      name,
+      price,
+      quantity: 1  // Set initial quantity to 1
+    });
+
+    // Save the new cart item to the database
+    await newCart.save();
+    res.status(201).json({ message: "Item added to cart", cart: newCart });
+  } catch (err) {
+    console.error("Error adding item to cart:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+// Get cart items
+app.get('/cart', async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const cartItems = await Cart.find({ userId })
+      .populate('productId', 'name price'); // Populate product details
+
+    if (cartItems.length > 0) {
+      res.status(200).json(cartItems); // Return populated cart items
+    } else {
+      res.status(404).json([]);
+    }
+  } catch (err) {
+    console.error("Error fetching cart items:", err);
+    res.status(500).json([]);
+  }
+});
+
+// Delete cart items
+app.delete('/cart', async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const deleteResult = await Cart.deleteOne({ id: id });
+
+    if (deleteResult.deletedCount === 0) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    res.status(200).json({ message: "Cart item deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting cart item:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
+});
+
+// Payment integration
+app.post('/api/process-payment', (req, res) => {
+  const { paymentData } = req.body;
+
+  // Log payment data for now (or process with a payment gateway)
+  console.log('Payment Data:', paymentData);
+
+  // Simulate success response
+  res.json({ status: 'success', message: 'Payment processed in Test Mode.' });
+});
+
+// Add orders
+app.post('/orders', (req, res) => {
+  const { id, userId, productId, date } = req.body;
+
+  if (!id || !userId || !productId || !date) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    const newOrder = {
+      id,
+      userId,
+      productId,
+      date: new Date(date), // Convert date string to Date object
+    };
+
+    orders.push(newOrder);
+
+    // Respond with the created order
+    res.status(201).json(newOrder);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred while creating the order' });
+  }
+});
+
+// WebRTC
+const http = require("http");
+const socketIo = require("socket.io");
+
+const server = http.createServer(app); // Create an HTTP server using Express
+const io = socketIo(server); // Set up Socket.IO to work with the server
+
+app.use(express.static('public'));  // Serve the frontend from the 'public' folder
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Join a specific room
+  socket.on('join', (roomId) => {
+    socket.join(roomId);
+    console.log(`User joined room: ${roomId}`);
+  });
+
+  // Handle WebRTC offer from a user
+  socket.on('offer', (roomId, offer) => {
+    socket.to(roomId).emit('offer', offer);
+  });
+
+  // Handle WebRTC answer from a user
+  socket.on('answer', (roomId, answer) => {
+    socket.to(roomId).emit('answer', answer);
+  });
+
+  // Handle ICE candidate
+  socket.on('candidate', (roomId, candidate) => {
+    socket.to(roomId).emit('candidate', candidate);
+  });
+
+  // Handle disconnect
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
+
 
 // Start the server
 const port = process.env.PORT || 3000;

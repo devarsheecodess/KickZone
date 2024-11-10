@@ -15,6 +15,8 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:3000/login', form);
             console.log(response.data);
+            const id = response.data.id;
+            localStorage.setItem('id', id);
             if (response.status === 200) {
                 alert('Login successful!');
                 navigate('/home');

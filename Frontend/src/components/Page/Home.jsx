@@ -50,7 +50,7 @@ const Home = () => {
 
     {/* Red background container */}
       <div className="w-full max-w-5xl mt-20 space-y-10 flex-1">
-        
+
         {/* Upcoming Matches Slider */}
         <section className="w-full bg-blue-800 border-4 border-yellow-600 text-center text-white py-20 text-3xl font-bold rounded-lg shadow-lg">
           <h2 className="mb-5">Upcoming Matches</h2>
@@ -66,7 +66,7 @@ const Home = () => {
             ))}
           </Swiper>
         </section>
-        
+
         {/* Predictions Slider */}
         <section className="w-full bg-red-800 border-4 border-yellow-600 text-center text-black py-20 text-3xl font-bold rounded-lg shadow-lg justify-between h-auto">
           <h2 className="mb-5 text-white">Predictions</h2>
@@ -81,7 +81,7 @@ const Home = () => {
                     <div className="w-full bg-gray-200 rounded-full h-4">
                       <div
                         className="bg-green-500 h-4 rounded-full"
-                        style={{ width: `${prediction.winProbability}%` }}
+                        style={{ width: `₹{prediction.winProbability}%` }}
                       ></div>
                     </div>
                     <p className="mt-2 text-gray-700">Win Probability: {prediction.winProbability}%</p>

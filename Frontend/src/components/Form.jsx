@@ -32,7 +32,7 @@ const FavoriteForm = () => {
 
     return (
         <div className="absolute top-0 left-0 -z-20 w-full min-h-screen bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] flex flex-col items-center p-4">
-              <div className="bg-red-800 p-8 rounded-lg shadow-lg max-w-sm w-full text-black border-4 border-yellow-600 justify-center">
+              <div className="bg-red-800 p-8 rounded-lg shadow-lg max-w-sm w-full text-black border-4 border-yellow-600 ">
       <h1 className="text-2xl font-semibold mb-6 text-center text-white">Favorite Footballer and Team</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">

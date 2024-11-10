@@ -1,18 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Landing from './components/Landing'
-import Login from './components/Login'
-import Signup from './components/Signup'
-import Header from './components/Header'
-import Home from './components/Page/Home'
-import Meet from './components/Page/Meet'
-import Polls from './components/Page/Polls'
-import Community from './components/Page/Community'
-import Games from './components/Page/Games'
-import LiveChat from './components/Livechat'
+// App.jsx
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+
+// Main Components
+import Landing from './components/Landing';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import Header from './components/Header';
+import Home from './components/Page/Home';
+import Meet from './components/Page/Meet';
+import Polls from './components/Page/Polls';
+import Community from './components/Page/Community';
+import Quiz from './components/Page/Quiz';
+import LiveChat from './components/Livechat';
 
 // Ecommerce Components
 import EcomHeader from './ecommerce/Header'
@@ -21,6 +24,7 @@ import AddStock from './ecommerce/AddStock'
 import Cart from './ecommerce/Cart'
 import Profile from './ecommerce/Profile'
 import Form from './components/Form'
+import GooglePayButton from './ecommerce/GooglePayButton';
 
 const AppRouter = () => (
   <Router>
@@ -29,6 +33,8 @@ const AppRouter = () => (
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/form" element={<Form />} />
+
+      {/* Routes with Header */}
       <Route
         path="/home"
         element={
@@ -43,57 +49,65 @@ const AppRouter = () => (
         element={
           <>
             <Header />
-            <Meet/>
-          </>
-        }
-      />
-       <Route
-        path="/community"
-        element={
-          <>
-            <Header />
-            <Community/>
-          </>
-        }
-      />
-       <Route
-        path="/polls"
-        element={
-          <>
-            <Header />
-            <Polls/>
+            <Meet />
           </>
         }
       />
       <Route
-        path="/games"
+        path="/community"
         element={
           <>
             <Header />
-            <Games />
+            <Community />
           </>
         }
       />
-      <Route path="/livechat" element={<div><Home/>< LiveChat/></div>}/>
+      <Route
+        path="/polls"
+        element={
+          <>
+            <Header />
+            <Polls />
+          </>
+        }
+      />
+      <Route
+        path="/quiz"
+        element={
+          <>
+            <Header />
+            <Quiz />
+          </>
+        }
+      />
+      <Route path="/livechat" element={<div><Home /><LiveChat /></div>} />
 
       {/* Ecommerce Routes */}
-      <Route path="/store" element={<div><EcomHeader/><MainPage/></div>} />
-      <Route path="/addStock" element={<div><AddStock/></div>} />
-      <Route path="/cart" element={<div><EcomHeader/><Cart/></div>} />
-      <Route path="/profile" element={<div><EcomHeader/><Profile/></div>} />
+      <Route path="/store" element={<div><EcomHeader /><MainPage /></div>} />
+      <Route path="/addStock" element={<AddStock />} />
+      <Route path="/cart" element={<div><EcomHeader /><Cart /></div>} />
+      <Route
+        path="/google-pay"
+        element={
+          <div>
+            <EcomHeader />
+            <h1>Google Pay Integration</h1>
+            <GooglePayButton totalPrice={100} />
+          </div>
+        }
+      />
     </Routes>
   </Router>
-)
-
+);
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
       <AppRouter />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
