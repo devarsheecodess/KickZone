@@ -13,6 +13,7 @@ const User = require("./Models/User"); // Assuming you have a User model
 const Product = require("./Models/Product");
 const Cart = require("./Models/Cart");
 const Orders = require("./Models/Orders");
+const Recommendation = require("./Models/Recommendation");
 
 // dotenv config
 dotenv.config();
@@ -94,6 +95,43 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     console.error("Error during login:", err);
     res.status(500).json({ success: false, message: "An error occurred" });
+  }
+});
+
+// Recommendations
+app.post("/recommendations", async (req, res) => {
+  const { id, userId, favPlayer, favClub } = req.body;
+
+  try {
+    const newRecommendation = new Recommendation({
+      id,
+      userId,
+      favPlayer,
+      favClub,
+    });
+
+    await newRecommendation.save();
+
+    res.status(201).json({
+      message: "Recommendation added successfully",
+      recommendation: newRecommendation,
+    });
+  } catch (err) {
+    console.error("Error adding recommendation:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Get recommendations
+app.get("/recommendations", async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const recommendations = await Recommendation.find({ userId });
+    res.status(200).json(recommendations);
+  } catch (err) {
+    console.error("Error fetching recommendations:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
