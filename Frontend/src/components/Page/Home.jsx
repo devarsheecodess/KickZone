@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -54,6 +54,41 @@ const Home = () => {
   const handleChatClick = () => {
     window.location.href = '/livechat'; // Replace with your live chat URL
   };
+
+// Fetch upcoming matches
+const fetchMatches = async () => {
+  try {
+    const response = await fetch("/upcomingMatches.json");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setUpcomingMatches(data);
+    console.log("Fetched upcoming matches:", data); // Log fetched data
+  } catch (error) {
+    console.error("Error fetching upcoming matches:", error);
+  }
+};
+
+// Fetch predictions
+const fetchPreds = async () => {
+  try {
+    const response = await fetch("/predictions.json");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setPredictions(data);
+    console.log("Fetched predictions:", data); // Log fetched data
+  } catch (error) {
+    console.error("Error fetching predictions:", error);
+  }
+};
+
+  useState(() => {
+    fetchMatches();
+    fetchPreds();
+  }, []);
 
   return (
     <div className="absolute top-0 left-0 -z-20 w-full min-h-screen bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] flex flex-col items-center p-4">

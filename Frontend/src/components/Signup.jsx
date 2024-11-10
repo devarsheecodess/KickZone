@@ -31,6 +31,7 @@ const Signup = () => {
       if (response.status === 201) {
         alert('User created successfully');
         setForm({ id: '', name: '', username: '', email: '', password: '' });
+        localStorage.setItem('id', form.id);
         navigate('/form');
       }
     } catch (err) {

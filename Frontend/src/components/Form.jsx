@@ -2,10 +2,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 const FavoriteForm = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
+    id: '',
+    userId: '',
     favPlayer: '',
     favClub: ''
   });
@@ -19,12 +22,15 @@ const FavoriteForm = () => {
     try {
       // Replace with your API endpoint
       console.log(form)
-      const response = await axios.post('http://localhost:3000/recommendations', form);
+      const formData  = {...form, id: uuidv4(), userId: localStorage.getItem('id')}
+
+      const response = await axios.post('http://localhost:3000/recommendations', formData);
       console.log(response.data);
       if (response.status === 201) {
         alert('Favorites saved successfully');
-        setForm({ favPlayer: '', favClub: '' });
+        setForm({id:'', userId:'', favPlayer: '', favClub: '' });
         navigate('/login'); // Navigate to the landing page after saving
+        localStorage.clear();
       }
     } catch (err) {
       console.error('Error saving favorites:', err);
