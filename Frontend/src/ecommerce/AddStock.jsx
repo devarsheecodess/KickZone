@@ -60,7 +60,7 @@ const AddStock = () => {
 
     try {
       console.log(product)
-      const response = await axios.post('http://localhost:3000/products', product);
+      const response = await axios.post('https://kickzone-backend.onrender.com/products', product);
       if (response.status === 201) {
         setSuccess('Product added successfully!');
         alert("Product added successfully")

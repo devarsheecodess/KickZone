@@ -14,8 +14,8 @@ function Recommendations() {
                     throw new Error("User ID not found in localStorage.");
                 }
 
-                const response = await axios.get('http://localhost:3000/recommendations', { params: { userId: userID } });
-                
+                const response = await axios.get('https://kickzone-backend.onrender.com/recommendations', { params: { userId: userID } });
+
                 // Check if response contains youtubeVideos
                 if (response.data?.youtubeVideos) {
                     setVideos(response.data.youtubeVideos);
@@ -37,7 +37,7 @@ function Recommendations() {
     if (error) return <div style={errorStyle}>{error}</div>;
 
     return (
-    <div className=" absolute inset-0 -z-20 w-full min-h-screen bg-transparent bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] flex flex-col items-center p-4 justify-center" style={containerStyle}>
+        <div className=" absolute inset-0 -z-20 w-full min-h-screen bg-transparent bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] flex flex-col items-center p-4 justify-center" style={containerStyle}>
             <h2>Recommended Videos</h2>
             {videos.length === 0 ? (
                 <p>No recommendations available at this time.</p>
@@ -47,7 +47,7 @@ function Recommendations() {
                         <div key={video.content?.id?.videoId} style={cardStyle}>
                             <h3>{video.content?.snippet?.title}</h3>
                             <p>{video.content?.snippet?.description}</p>
-                            <a 
+                            <a
                                 href={`https://www.youtube.com/watch?v=${video.content?.id?.videoId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"

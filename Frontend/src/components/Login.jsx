@@ -13,7 +13,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/login', form);
+            const response = await axios.post('https://kickzone-backend.onrender.com/login', form);
             console.log(response.data);
             const id = response.data.id;
             localStorage.setItem('id', id);
@@ -30,7 +30,7 @@ const Login = () => {
         <div className="relative flex items-center justify-center h-screen">
             {/* Background Gradient */}
             <div className="absolute top-0 left-0 -z-20 w-full min-h-screen bg-[radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
-            
+
             {/* Login Box with yellow border glow */}
             <div className="bg-red-800 p-8 rounded-lg shadow-lg max-w-sm w-full text-black border-4 border-yellow-600 ">
                 <h1 className="text-2xl text-white font-bold mb-6 text-center">Login</h1>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -24,10 +24,10 @@ const Signup = () => {
     try {
       // Add the id to the form object before sending the request
       const userForm = { ...form, id: uuidv4() };
-  
-      const response = await axios.post('http://localhost:3000/users', userForm);
+
+      const response = await axios.post('https://kickzone-backend.onrender.com:10000/users', userForm);
       console.log(response.data);
-  
+
       if (response.status === 201) {
         alert('User created successfully');
         setForm({ id: '', name: '', username: '', email: '', password: '' });
@@ -38,7 +38,7 @@ const Signup = () => {
       console.error('Error creating user:', err);
     }
   };
-  
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

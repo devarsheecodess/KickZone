@@ -14,7 +14,7 @@ const Cart = () => {
             const userID = localStorage.getItem('id');
             console.log(userID); // Log the user ID
 
-            const response = await axios.get('http://localhost:3000/cart', { params: { userId: userID } });
+            const response = await axios.get('https://kickzone-backend.onrender.com/cart', { params: { userId: userID } });
 
             if (response.data && response.data.length > 0) {
                 // Map the response to include product details (name, price, quantity)
@@ -47,7 +47,7 @@ const Cart = () => {
                 return;
             }
 
-            const response = await axios.delete(`http://localhost:3000/cart`, { params: itemId });
+            const response = await axios.delete(`https://kickzone-backend.onrender.com/cart`, { params: itemId });
 
             if (response.status === 200) {
                 alert("Item deleted successfully!");
@@ -69,13 +69,13 @@ const Cart = () => {
     if (loading) {
         return (
             <div className="flex justify-center mt-20 min-h-screen">
-              <div className="fixed top-0 left-0 w-full h-full z-[-1] bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
-              <div className="text-2xl font-semibold text-white animate-pulse">
-                Loading...
-              </div>
+                <div className="fixed top-0 left-0 w-full h-full z-[-1] bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
+                <div className="text-2xl font-semibold text-white animate-pulse">
+                    Loading...
+                </div>
             </div>
-          );
-          
+        );
+
     }
 
     return (
@@ -119,7 +119,7 @@ const Cart = () => {
 
                         <div className="flex justify-between items-center mt-6">
                             <p className="text-xl font-semibold">Total: ₹{totalPrice.toFixed(2)}</p>
-                            <button 
+                            <button
                                 className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600"
                                 onClick={() => setShowGooglePay(true)}  // Show Google Pay button on click
                             >

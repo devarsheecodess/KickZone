@@ -15,7 +15,7 @@ const Meet = () => {
     "Room 4"
   ]);
 
-  const socket = io("http://localhost:3000");
+  const socket = io("https://kickzone-backend.onrender.com");
 
   useEffect(() => {
     if (joined) {
