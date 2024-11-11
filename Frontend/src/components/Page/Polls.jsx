@@ -9,7 +9,7 @@ const PollingPage = () => {
 
   useEffect(() => {
     // Create WebSocket connection
-    const socket = new WebSocket("ws://localhost:5000/polls");
+    const socket = new WebSocket("https://kickzone-sockets.onrender.com/polls");
 
     // Set up event listeners for the WebSocket connection
     socket.onopen = () => {

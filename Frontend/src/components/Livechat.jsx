@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import io from "socket.io-client"; // Import socket.io-client
 
 // Connect to WebSocket server
-const socket = io("http://localhost:5000");
+const socket = io("https://kickzone-backend.onrender.com");
 
 const LiveChat = () => {
   const [messages, setMessages] = useState([]);
