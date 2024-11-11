@@ -6,10 +6,11 @@ const MainPage = () => {
   const [tickets, setTickets] = useState([]);
   const [merch, setMerch] = useState([]);
   const [userID, setUserID] = useState('')
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchTickets = async () => {
     try {
-      const response = await axios.get('https://kickzone-backend.onrender.com/products', { params: { type: 'ticket' } });
+      const response = await axios.get(`${BACKEND_URL}/products`, { params: { type: 'ticket' } });
       setTickets(response.data);
     } catch (err) {
       console.error('Error fetching tickets:', err);
@@ -18,7 +19,7 @@ const MainPage = () => {
 
   const fetchMerch = async () => {
     try {
-      const response = await axios.get('https://kickzone-backend.onrender.com/products', { params: { type: 'merch' } });
+      const response = await axios.get(`${BACKEND_URL}/products`, { params: { type: 'merch' } });
       setMerch(response.data);
     } catch (err) {
       console.error('Error fetching merch:', err);
@@ -28,7 +29,7 @@ const MainPage = () => {
   const addToCart = async (productId) => {
     try {
       // Fetch product details
-      const productDetailsResponse = await axios.get('https://kickzone-backend.onrender.com/products-id', { params: { id: productId } });
+      const productDetailsResponse = await axios.get(`${BACKEND_URL}/products-id`, { params: { id: productId } });
       const productDetails = productDetailsResponse.data;
       console.log(productDetails)
 
@@ -50,7 +51,7 @@ const MainPage = () => {
       console.log(newCartItem);
 
       // Add the product to the cart in the DB
-      const response = await axios.post('https://kickzone-backend.onrender.com/cart', newCartItem);
+      const response = await axios.post(`${BACKEND_URL}/cart`, newCartItem);
 
       if (response.status === 201 || response.status === 200) { // Check for 201 Created
         alert("Product added to the cart!");

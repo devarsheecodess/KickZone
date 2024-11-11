@@ -6,10 +6,11 @@ const PollingPage = () => {
   const [polls, setPolls] = useState([]);
   const [ws, setWs] = useState(null); // WebSocket connection
   const [votedPolls, setVotedPolls] = useState(new Set()); // Track voted polls
+  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
   useEffect(() => {
     // Create WebSocket connection
-    const socket = new WebSocket("https://kickzone-sockets.onrender.com/polls");
+    const socket = new WebSocket(`${SOCKET_URL}/polls`);
 
     // Set up event listeners for the WebSocket connection
     socket.onopen = () => {

@@ -5,6 +5,7 @@ function Recommendations() {
     const [videos, setVideos] = useState([]); // Initialize as an empty array
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         const fetchRecommendations = async () => {
@@ -14,7 +15,7 @@ function Recommendations() {
                     throw new Error("User ID not found in localStorage.");
                 }
 
-                const response = await axios.get('https://kickzone-backend.onrender.com/recommendations', { params: { userId: userID } });
+                const response = await axios.get(`${BACKEND_URL}/recommendations`, { params: { userId: userID } });
 
                 // Check if response contains youtubeVideos
                 if (response.data?.youtubeVideos) {

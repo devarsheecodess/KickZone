@@ -14,8 +14,9 @@ const Meet = () => {
     "Room 3",
     "Room 4"
   ]);
+  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
-  const socket = io("https://kickzone-backend.onrender.com");
+  const socket = io(`${SOCKET_URL}`);
 
   useEffect(() => {
     if (joined) {

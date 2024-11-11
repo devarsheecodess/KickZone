@@ -7,6 +7,7 @@ const Cart = () => {
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [showGooglePay, setShowGooglePay] = useState(false);  // Toggle Google Pay button
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const fetchCartItems = async () => {
         setLoading(true);
@@ -14,7 +15,7 @@ const Cart = () => {
             const userID = localStorage.getItem('id');
             console.log(userID); // Log the user ID
 
-            const response = await axios.get('https://kickzone-backend.onrender.com/cart', { params: { userId: userID } });
+            const response = await axios.get(`${BACKEND_URL}/cart`, { params: { userId: userID } });
 
             if (response.data && response.data.length > 0) {
                 // Map the response to include product details (name, price, quantity)
@@ -47,7 +48,7 @@ const Cart = () => {
                 return;
             }
 
-            const response = await axios.delete(`https://kickzone-backend.onrender.com/cart`, { params: itemId });
+            const response = await axios.delete(`${BACKEND_URL}/cart`, { params: itemId });
 
             if (response.status === 200) {
                 alert("Item deleted successfully!");

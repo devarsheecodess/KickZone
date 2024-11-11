@@ -13,6 +13,7 @@ const AddStock = () => {
     type: 'merch',
     date: ''
   });
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [isTicket, setIsTicket] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -60,7 +61,7 @@ const AddStock = () => {
 
     try {
       console.log(product)
-      const response = await axios.post('https://kickzone-backend.onrender.com/products', product);
+      const response = await axios.post(`${BACKEND_URL}/products`, product);
       if (response.status === 201) {
         setSuccess('Product added successfully!');
         alert("Product added successfully")

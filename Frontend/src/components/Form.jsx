@@ -13,6 +13,8 @@ const FavoriteForm = () => {
     favClub: ''
   });
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -24,7 +26,7 @@ const FavoriteForm = () => {
       console.log(form)
       const formData = { ...form, id: uuidv4(), userId: localStorage.getItem('id') }
 
-      const response = await axios.post('https://kickzone-backend.onrender.com/recommendations', formData);
+      const response = await axios.post(`${BACKEND_URL}/recommendations`, formData);
       console.log(response.data);
       if (response.status === 201) {
         alert('Favorites saved successfully');

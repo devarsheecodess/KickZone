@@ -5,6 +5,7 @@ import axios from 'axios';
 const Login = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState({ username: '', email: '', password: '' });
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -13,7 +14,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://kickzone-backend.onrender.com/login', form);
+            const response = await axios.post(`${BACKEND_URL}/login`, form);
             console.log(response.data);
             const id = response.data.id;
             localStorage.setItem('id', id);

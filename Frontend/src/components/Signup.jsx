@@ -12,6 +12,7 @@ const Signup = () => {
     email: '',
     password: '',
   });
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -25,7 +26,7 @@ const Signup = () => {
       // Add the id to the form object before sending the request
       const userForm = { ...form, id: uuidv4() };
 
-      const response = await axios.post('https://kickzone-backend.onrender.com:10000/users', userForm);
+      const response = await axios.post(`${BACKEND_URL}/users`, userForm);
       console.log(response.data);
 
       if (response.status === 201) {

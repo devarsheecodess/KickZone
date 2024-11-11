@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import io from "socket.io-client"; // Import socket.io-client
 
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+
 // Connect to WebSocket server
-const socket = io("https://kickzone-backend.onrender.com");
+const socket = io(`${SOCKET_URL}`);
 
 const LiveChat = () => {
   const [messages, setMessages] = useState([]);
