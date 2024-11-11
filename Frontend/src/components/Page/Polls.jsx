@@ -9,7 +9,7 @@ const PollingPage = () => {
 
   useEffect(() => {
     // Create WebSocket connection
-    const socket = new WebSocket("ws://localhost:5002");
+    const socket = new WebSocket("ws://localhost:5000/polls");
 
     // Set up event listeners for the WebSocket connection
     socket.onopen = () => {
