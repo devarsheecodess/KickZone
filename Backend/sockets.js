@@ -9,8 +9,9 @@ const server = http.createServer(app);
 
 // Enable CORS for Express and Socket.IO
 app.use(cors());
-app.use(express.static('public'));  // Serve frontend from 'public' folder
+app.use(express.static('public'));
 
+// Initialize Socket.IO with CORS
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -18,29 +19,38 @@ const io = socketIo(server, {
   }
 });
 
-// WebSocket server for polls
-const wss = new WebSocket.Server({ server, path: "/polls" });
-let polls = {}; // Store polls and their votes
+// Create separate namespaces for different features
+const chatIO = io.of('/chat');
+const meetIO = io.of('/meet');
 
+// Store active rooms and their participants
+const rooms = new Map();
+
+// WebSocket server for polls (separate from Socket.IO)
+const wss = new WebSocket.Server({ server, path: "/polls" });
+let polls = {};
+
+// Polls WebSocket Handler
 wss.on('connection', (ws) => {
     console.log('A user connected to polls');
 
     // Send existing polls to the newly connected client
     ws.send(JSON.stringify({ type: 'polls', data: polls }));
 
-    // Listen for messages from clients
     ws.on('message', (message) => {
         const data = JSON.parse(message);
 
         switch (data.type) {
             case 'createPoll':
-                // Create a new poll
-                polls[data.pollId] = { question: data.question, options: data.options, votes: new Array(data.options.length).fill(0) };
+                polls[data.pollId] = {
+                    question: data.question,
+                    options: data.options,
+                    votes: new Array(data.options.length).fill(0)
+                };
                 broadcastPolls();
                 break;
 
             case 'vote':
-                // Record a vote for a poll option
                 if (polls[data.pollId]) {
                     polls[data.pollId].votes[data.optionIndex]++;
                     broadcastPolls();
@@ -49,13 +59,11 @@ wss.on('connection', (ws) => {
         }
     });
 
-    // Handle client disconnection
     ws.on('close', () => {
         console.log('A user disconnected from polls');
     });
 });
 
-// Function to broadcast polls to all WebSocket clients
 function broadcastPolls() {
     const message = JSON.stringify({ type: 'polls', data: polls });
     wss.clients.forEach((client) => {
@@ -65,44 +73,116 @@ function broadcastPolls() {
     });
 }
 
-// Socket.IO connection for live chat
-io.on('connection', (socket) => {
-  console.log('A user connected to live chat');
+// Chat Handler (Separate namespace)
+// Chat Handler (Separate namespace)
+chatIO.on('connection', (socket) => {
+  console.log('A user connected to chat');
 
-  // Join a specific room (for WebRTC)
-  socket.on('join', (roomId) => {
-    socket.join(roomId);
-    console.log(`User joined room: ${roomId}`);
-  });
-
-  // Listen for chat messages from clients
   socket.on('chatMessage', (msg) => {
-    io.emit('chatMessage', msg); // Broadcast message to all clients
+      chatIO.emit('chatMessage', msg); // Broadcast only to chat users
   });
 
-  // Handle WebRTC offer from a user
-  socket.on('offer', (roomId, offer) => {
-    socket.to(roomId).emit('offer', offer);
-  });
-
-  // Handle WebRTC answer from a user
-  socket.on('answer', (roomId, answer) => {
-    socket.to(roomId).emit('answer', answer);
-  });
-
-  // Handle ICE candidate
-  socket.on('candidate', (roomId, candidate) => {
-    socket.to(roomId).emit('candidate', candidate);
-  });
-
-  // Handle disconnection
   socket.on('disconnect', () => {
-    console.log('User disconnected from live chat or virtual meeting');
+      console.log('User disconnected from chat');
   });
 });
 
+// Meeting Handler (Separate namespace)
+meetIO.on('connection', (socket) => {
+    console.log('A user connected to meeting:', socket.id);
+
+    // Join meeting room
+    socket.on('joinRoom', (roomId, userId) => {
+        console.log(`User ${userId} joining room ${roomId}`);
+        
+        socket.join(roomId);
+        
+        // Initialize room if it doesn't exist
+        if (!rooms.has(roomId)) {
+            rooms.set(roomId, new Set());
+        }
+        
+        // Add user to room
+        rooms.get(roomId).add(userId);
+        
+        // Notify others in room about new participant
+        socket.to(roomId).emit('userJoined', {
+            userId: userId,
+            participants: Array.from(rooms.get(roomId))
+        });
+        
+        // Send current participants to new user
+        socket.emit('roomInfo', {
+            participants: Array.from(rooms.get(roomId))
+        });
+    });
+
+    // Handle WebRTC signaling
+    socket.on('offer', (data) => {
+        console.log(`Relaying offer from ${data.userId} to room ${data.roomId}`);
+        socket.to(data.roomId).emit('offer', {
+            offer: data.offer,
+            userId: data.userId
+        });
+    });
+
+    socket.on('answer', (data) => {
+        console.log(`Relaying answer from ${data.userId} to room ${data.roomId}`);
+        socket.to(data.roomId).emit('answer', {
+            answer: data.answer,
+            userId: data.userId
+        });
+    });
+
+    socket.on('iceCandidate', (data) => {
+        console.log(`Relaying ICE candidate from ${data.userId} to room ${data.roomId}`);
+        socket.to(data.roomId).emit('iceCandidate', {
+            candidate: data.candidate,
+            userId: data.userId
+        });
+    });
+
+    // Handle user leaving meeting
+    socket.on('leaveRoom', (roomId, userId) => {
+        handleUserLeaveRoom(socket, roomId, userId);
+    });
+
+    socket.on('disconnect', () => {
+        // Find and remove user from all rooms they were in
+        rooms.forEach((participants, roomId) => {
+            if (participants.has(socket.id)) { // Check if the user is in this room
+                handleUserLeaveRoom(socket, roomId, socket.id);
+            }
+        });
+        console.log('User disconnected from meeting:', socket.id);
+    });
+});
+
+function handleUserLeaveRoom(socket, roomId, userId) {
+    console.log(`User ${userId} leaving room ${roomId}`);
+    
+    socket.leave(roomId);
+    
+    const roomParticipants = rooms.get(roomId);
+    
+    if (roomParticipants) {
+        roomParticipants.delete(userId); // Remove the user from the set
+        
+        if (roomParticipants.size === 0) { 
+            rooms.delete(roomId); // Remove the room if no participants are left
+            console.log(`Room ${roomId} has been deleted as it is empty.`);
+        } else { 
+            // Notify others that the user has left
+            socket.to(roomId).emit('userLeft', {
+                userId: userId,
+                participants: Array.from(roomParticipants)
+            });
+            console.log(`User ${userId} has left room ${roomId}.`);
+        }
+    }
+}
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-  console.log('WebSocket server for polls is available on ws://localhost:5000/polls');
+    console.log(`Server is running on http://localhost:${PORT}`);
 });

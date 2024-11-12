@@ -6,12 +6,13 @@ import io from "socket.io-client"; // Import socket.io-client
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 // Connect to WebSocket server
-const socket = io(`${SOCKET_URL}`);
+const socket = io(`${SOCKET_URL}/chat`);
 
 const LiveChat = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [emoji, setEmoji] = useState("😊");
+  const user = localStorage.getItem("user") || "Anonymous"; // Default to "Anonymous" if no user is found
 
   useEffect(() => {
     // Listen for incoming messages from the server
@@ -27,7 +28,7 @@ const LiveChat = () => {
 
   const handleSendMessage = () => {
     if (inputValue.trim() !== "") {
-      const message = { text: inputValue, emoji };
+      const message = { text: inputValue, emoji, user }; // Include user in the message object
       socket.emit("chatMessage", message); // Send message to the server
       setInputValue(""); // Clear the input field
     }
@@ -52,7 +53,7 @@ const LiveChat = () => {
             ) : (
               messages.map((msg, index) => (
                 <div key={index} className="bg-gray-100 p-3 rounded shadow text-black">
-                  <span>{msg.emoji}</span> {msg.text}
+                  <span className="font-bold">{msg.user}:</span> {msg.text} {/* Display user name */}
                 </div>
               ))
             )}

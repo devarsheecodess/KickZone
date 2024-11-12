@@ -17,7 +17,9 @@ const Login = () => {
             const response = await axios.post(`${BACKEND_URL}/login`, form);
             console.log(response.data);
             const id = response.data.id;
+            const username = response.data.username;
             localStorage.setItem('id', id);
+            localStorage.setItem('user', username);
             if (response.status === 200) {
                 alert('Login successful!');
                 navigate('/home');
