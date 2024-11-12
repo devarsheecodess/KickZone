@@ -19,7 +19,8 @@ const Meet = () => {
     "Room 2",
     "Room 3",
     "Room 4",
-    "Room 5"
+    "Room 5",
+    "Room 6"
   ];
 
   useEffect(() => {
@@ -219,7 +220,7 @@ const Meet = () => {
           </div>
         </div>
       ) : (
-        <div className="w-full p-6 space-y-6">
+        <div className="w-full p-6 space-y-6 mt-14">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
             {/* Local Video */}
             <div className="relative aspect-video bg-gray-900 rounded-xl border-2 border-gray-800 overflow-hidden shadow-xl">
