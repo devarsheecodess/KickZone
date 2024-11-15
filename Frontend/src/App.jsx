@@ -114,17 +114,18 @@ function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const id = localStorage.getItem('id')
-    if (id == null) {
-      if (window.location.href.includes('login')) {
-        return
-      }
-      alert('Please login to continue')
-      window.location.href = '/login'
-      return
+    const id = localStorage.getItem('id');
+    const currentPath = window.location.pathname;
+  
+    // Paths that do not require login
+    const publicPaths = ['/login', '/signup', '/'];
+  
+    if (!id && !publicPaths.includes(currentPath)) {
+      alert('Please login to continue');
+      window.location.href = '/login';
     }
-
   }, []);
+  
 
   return (
     <>
