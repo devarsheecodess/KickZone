@@ -113,7 +113,7 @@ const MainPage = () => {
       <div className="fixed top-0 left-0 w-full h-full z-[-2] bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
 
       {/* Main Content */}
-      <main className="w-full max-w-7xl mt-8 px-4 py-6 flex flex-col items-center">
+      <main className="w-full max-w-7xl mt-20 px-4 py-6 flex flex-col items-center">
         {/* Hero Section */}
         <section className="relative w-full text-center py-24 px-4 mb-12 overflow-hidden rounded-2xl">
           {/* SVG Background Pattern */}

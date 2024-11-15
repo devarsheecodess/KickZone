@@ -1,62 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GooglePayButton from './GooglePayButton';
+import { Trash2, ShoppingBag, AlertCircle } from 'lucide-react';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [products, setProducts] = useState([]);
-    const [showGooglePay, setShowGooglePay] = useState(false);  // Toggle Google Pay button
+    const [showGooglePay, setShowGooglePay] = useState(false);
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const fetchCartItems = async () => {
         setLoading(true);
         try {
             const userID = localStorage.getItem('id');
-            console.log(userID); // Log the user ID
-
             const response = await axios.get(`${BACKEND_URL}/cart`, { params: { userId: userID } });
 
             if (response.data && response.data.length > 0) {
-                // Map the response to include product details (name, price, quantity)
-                const productDetailsArray = response.data.map(item => {
-                    return {
-                        productId: item.productId, // Product ID (unique identifier)
-                        name: item.name, // Name of the product
-                        price: item.price, // Price of the product
-                        quantity: item.quantity // Quantity in cart
-                    };
-                });
-
-                console.log(productDetailsArray);
-                setCartItems(productDetailsArray); // Set state with product details
+                const productDetailsArray = response.data.map(item => ({
+                    productId: item.productId,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                }));
+                setCartItems(productDetailsArray);
             } else {
-                console.log('No cart items found for this user.');
-                setCartItems([]);  // Set an empty array if no items are found
+                setCartItems([]);
             }
         } catch (error) {
-            console.error('Error fetching cart items:', error.message || error);
+            console.error('Error fetching cart items:', error);
         } finally {
-            setLoading(false);  // Ensure loading is set to false after fetch attempt
+            setLoading(false);
         }
     };
 
     const deleteItem = async (itemId) => {
         try {
             const confirmDelete = confirm("Are you sure you want to delete this item from your cart?");
-            if (!confirmDelete) {
-                return;
-            }
+            if (!confirmDelete) return;
 
             const response = await axios.delete(`${BACKEND_URL}/cart`, { params: itemId });
-
             if (response.status === 200) {
-                alert("Item deleted successfully!");
                 fetchCartItems();
             }
         } catch (err) {
-            console.error("Error deleting item:", err.response ? err.response.data : err.message);
-            alert("Failed to delete item from cart. Please try again.");
+            console.error("Error deleting item:", err);
         }
     };
 
@@ -64,78 +51,87 @@ const Cart = () => {
         fetchCartItems();
     }, []);
 
-    // Calculate total price
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
     if (loading) {
         return (
-            <div className="flex justify-center mt-20 min-h-screen">
-                <div className="fixed top-0 left-0 w-full h-full z-[-1] bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
-                <div className="text-2xl font-semibold text-white animate-pulse">
-                    Loading...
+            <div className="w-full h-screen fixed top-0 left-0 flex items-center justify-center bg-[#1C1C1F]">
+                <div className="text-2xl font-medium text-gray-400 flex items-center gap-2">
+                    <div className="w-6 h-6 border-4 border-gray-700 border-t-gray-400 rounded-full animate-spin"></div>
+                    Loading Cart
                 </div>
             </div>
         );
-
     }
 
     return (
-        <div className="relative min-h-screen">
-            {/* Full-screen background */}
-            <div className="fixed top-0 left-0 w-full h-full z-[-1] bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
-
-            <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md mt-10">
-                <h2 className="text-3xl font-semibold text-center mb-6">Shopping Cart</h2>
-
-                {cartItems.length === 0 ? (
-                    <div className="text-center text-gray-500">
-                        <p>Your cart is empty.</p>
+        <div className="w-full min-h-screen fixed top-0 left-0 pt-20">
+            {/* Background with gradient */}
+            <div className="absolute inset-0 bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
+            
+            {/* Content */}
+            <div className="relative z-10 px-4 py-8">
+                <div className="max-w-4xl mx-auto rounded-2xl bg-[#2A2A30] p-6">
+                    <div className="flex items-center justify-center gap-3 mb-8">
+                        <ShoppingBag className="w-8 h-8 text-gray-400" />
+                        <h2 className="text-3xl font-semibold text-white">Your Cart</h2>
                     </div>
-                ) : (
-                    <div>
-                        <div className="space-y-6">
-                            {cartItems.map((item) => (
-                                <div key={item.productId} className="flex items-center justify-between p-4 border-b border-gray-300 bg-white shadow-md rounded-lg">
-                                    <div className="flex items-center space-x-4">
-                                        <div>
-                                            {/* Display product name */}
-                                            <h1 className="text-lg font-semibold">{item.name}</h1>
-                                            {/* Display price */}
-                                            <p className="text-gray-500">Price: ₹{item.price.toFixed(2)}</p>
-                                            {/* Display quantity */}
-                                            <p className="text-gray-500">Quantity: {item.quantity}</p>
-                                        </div>
-                                    </div>
 
-                                    <button
-                                        onClick={() => { deleteItem(item.id) }}
-                                        className='bg-red-500 text-white p-2 rounded hover:bg-red-700 transition duration-200'
-                                        aria-label="Delete item"
-                                    >
-                                        <i className="fas fa-trash-alt"></i> {/* Font Awesome bin icon */}
-                                    </button>
+                    {cartItems.length === 0 ? (
+                        <div className="text-center py-16">
+                            <AlertCircle className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+                            <p className="text-gray-400 text-xl">Your cart is empty</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {cartItems.map((item) => (
+                                <div 
+                                    key={item.productId} 
+                                    className="group relative overflow-hidden rounded-lg bg-[#343438] p-4 transition-all duration-300 hover:bg-[#3A3A3E]"
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-1">
+                                            <h3 className="text-lg font-medium text-white">{item.name}</h3>
+                                            <div className="flex gap-4 text-sm text-gray-400">
+                                                <p>₹{item.price.toFixed(2)}</p>
+                                                <span>•</span>
+                                                <p>Quantity: {item.quantity}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <button
+                                            onClick={() => deleteItem(item.id)}
+                                            className="p-2 text-gray-400 hover:text-red-400 transition-colors duration-200"
+                                            aria-label="Delete item"
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
-                        </div>
 
-                        <div className="flex justify-between items-center mt-6">
-                            <p className="text-xl font-semibold">Total: ₹{totalPrice.toFixed(2)}</p>
-                            <button
-                                className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600"
-                                onClick={() => setShowGooglePay(true)}  // Show Google Pay button on click
-                            >
-                                Proceed to Checkout
-                            </button>
-                        </div>
+                            <div className="mt-8 pt-6 border-t border-gray-700">
+                                <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                    <p className="text-xl font-semibold text-white">
+                                        Total: ₹{totalPrice.toFixed(2)}
+                                    </p>
+                                    <button
+                                        onClick={() => setShowGooglePay(true)}
+                                        className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium transition-all duration-200 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[#2A2A30]"
+                                    >
+                                        Proceed to Checkout
+                                    </button>
+                                </div>
 
-                        {/* Google Pay Button */}
-                        {showGooglePay && (
-                            <div className="mt-6">
-                                <GooglePayButton totalPrice={totalPrice} />
+                                {showGooglePay && (
+                                    <div className="mt-6">
+                                        <GooglePayButton totalPrice={totalPrice} />
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
