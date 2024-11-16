@@ -1,4 +1,5 @@
 import React from 'react';
+import Typewriter from 'react-typewriter-effect';
 
 const Landing = () => {
   return (
@@ -36,16 +37,32 @@ const Landing = () => {
         <h1 className="text-6xl md:text-8xl font-extrabold text-white tracking-wider leading-tight drop-shadow-md">
           Let's Football!!
         </h1>
-        <p className="text-lg md:text-2xl text-white opacity-90 drop-shadow-md">
-          Welcome to KickZone – Your Ultimate Football Hub
-        </p>
-        <a
-  href="./signup"
-  className="bg-[radial-gradient(ellipse_at_center,_#FFD700,_#FFA500)] text-black font-bold py-4 px-10 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_#FFD700]"
->
-  Get Started
-</a>
 
+        {/* Typewriter Effect */}
+        <div className="text-lg md:text-2xl text-white opacity-90 drop-shadow-md">
+          <Typewriter
+            textStyle={{
+              fontSize: "1.5rem",
+              color: "white",
+            }}
+            startDelay={500}
+            cursorColor="white"
+            multiText={[
+              "Welcome to KickZone – Your Ultimate Football Hub",
+              "Stay updated with the latest football news!",
+            ]}
+            multiTextDelay={2000}
+            typeSpeed={50}
+            hideCursorAfterText
+          />
+        </div>
+
+        <a
+          href="./signup"
+          className="bg-[radial-gradient(ellipse_at_center,_#FFD700,_#FFA500)] text-black font-bold py-4 px-10 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_#FFD700]"
+        >
+          Get Started
+        </a>
       </div>
     </div>
   );
