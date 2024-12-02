@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs"); // for password hashing
 const dotenv = require("dotenv");
 const app = express();
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const cookieSession = require("cookie-session");
+const session = require("express-session");
+
 
 // CORS
 const cors = require("cors");
@@ -96,6 +101,112 @@ app.post("/login", async (req, res) => {
     console.error("Error during login:", err);
     res.status(500).json({ success: false, message: "An error occurred" });
   }
+});
+
+
+// Configure Google Strategy
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID, // Google Client ID
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Google Client Secret
+      callbackURL: "/auth/google/callback", // Callback URL after Google Auth
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Find or create the user in your database
+        const user = await User.findOneAndUpdate(
+          { googleId: profile.id }, // Match by googleId
+          {
+            googleId: profile.id, // Update or set googleId
+            name: profile.displayName, // Google profile name
+            email: profile.emails[0]?.value, // First email from profile
+            username: profile.emails[0]?.value.split("@")[0], // Generate username from email (example logic)
+            password: "N/A", // No password since this is Google Auth
+          },
+          { upsert: true, new: true } // Create if not found, return updated document
+        );
+        return done(null, user);
+      } catch (error) {
+        console.error("Error in Google Strategy:", error);
+        return done(error, null);
+      }
+    }
+  )
+);
+
+// Serialize User
+passport.serializeUser((user, done) => {
+  // Store googleId in session
+  done(null, user.googleId);
+});
+
+// Deserialize User
+passport.deserializeUser(async (googleId, done) => {
+  try {
+    // Find user by googleId (not _id)
+    const user = await User.findOne({ googleId });
+    if (!user) {
+      return done(new Error("User not found"), null);
+    }
+    done(null, user);
+  } catch (error) {
+    console.error("Error during deserializeUser:", error);
+    done(error, null);
+  }
+});
+
+// Middleware for Cookie Session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      secure: false,
+    },
+  })
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// Route to trigger Google OAuth login
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Route to handle callback after Google Auth
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "https://kick-zone.vercel.app//login" }),
+  (req, res) => {
+    req.login(req.user, (err) => {
+      if (err) {
+        console.error("Error during login:", err);
+        return res.status(500).json({ success: false, message: "Login failed" });
+      }
+      // Redirect to the frontend with user details
+      const redirectUrl = `https://kick-zone.vercel.app/home?id=${req.user._id}&username=${req.user.username}`;
+      res.redirect(redirectUrl);
+    });
+  }
+);
+
+
+
+// Logout Route
+app.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/"); // Redirect to homepage
+  });
 });
 
 // Recommendations

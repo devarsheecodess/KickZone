@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/autoplay"; // Ensure styles load
+import { useNavigate } from "react-router-dom";
 
 import { Navigation, Pagination, Autoplay } from "swiper/modules"; // Import directly from modules
 
@@ -50,6 +51,27 @@ const Home = () => {
       1024: { slidesPerView: 3 },
     },
   };
+
+  //handle parameteres from Google login
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Extract query parameters from URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const username = params.get("username");
+
+    if (id && username) {
+      // Save user details in localStorage
+      localStorage.setItem("id", id);
+      localStorage.setItem("user", username);
+
+      alert(`Welcome, ${username}!`);
+    } else {
+      // Redirect to login if no user details are present
+      alert("Login required");
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleChatClick = () => {
     window.location.href = '/livechat'; // Replace with your live chat URL
