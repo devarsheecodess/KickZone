@@ -183,7 +183,7 @@ app.get(
 // Route to handle callback after Google Auth
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "https://kick-zone.vercel.app//login" }),
+  passport.authenticate("google", { failureRedirect: "https://kick-zone.vercel.app/login" }),
   (req, res) => {
     req.login(req.user, (err) => {
       if (err) {
