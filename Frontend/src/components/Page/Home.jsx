@@ -66,10 +66,6 @@ const Home = () => {
       localStorage.setItem("user", username);
 
       alert(`Welcome, ${username}!`);
-    } else {
-      // Redirect to login if no user details are present
-      alert("Login required");
-      navigate("/login");
     }
   }, [navigate]);
 
