@@ -5,6 +5,8 @@ import axios from 'axios';
 const Login = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState({ username: '', email: '', password: '' });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const handleChange = (e) => {
@@ -13,6 +15,8 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError('');
         try {
             const response = await axios.post(`${BACKEND_URL}/login`, form);
             console.log(response.data);
@@ -26,12 +30,38 @@ const Login = () => {
             }
         } catch (error) {
             console.error(error);
+            setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = `${BACKEND_URL}/auth/google`;
+        setIsLoading(true);
+        setError('');
+        try {
+            // Redirect to Google OAuth endpoint
+            console.log('Redirecting to Google login...');
+            // Add a timeout to show loading state before redirect
+            setTimeout(() => {
+                window.location.href = `${BACKEND_URL}/auth/google`;
+            }, 100);
+            // Note: We won't reach the code below due to page redirect
+        } catch (error) {
+            console.error('Google login error:', error);
+            setError('Failed to connect to Google login. Please try again.');
+            setIsLoading(false);
+        }
     };
+    
+    // Check for error parameter in URL (from Google auth redirect)
+    React.useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorParam = urlParams.get('error');
+        if (errorParam) {
+            setError('Google authentication failed. Please try again or use email login.');
+        }
+    }, []);
 
     return (
         <div className="relative flex items-center justify-center h-screen">
@@ -73,19 +103,22 @@ const Login = () => {
                             placeholder="Enter your password"
                         />
                     </div>
+                    {error && <p className="text-yellow-300 text-sm mt-2">{error}</p>}
                     <button
                         onClick={(e) => handleSubmit(e)}
                         type="submit"
-                        className="w-full bg-indigo-800 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
+                        disabled={isLoading}
+                        className="w-full bg-indigo-800 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200 disabled:bg-gray-500 disabled:cursor-not-allowed"
                     >
-                        Login
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
 
                 <div className="mt-6 text-center">
                     <button
                         onClick={handleGoogleLogin}
-                        className="flex items-center justify-center w-full border rounded-lg px-4 py-2 hover:bg-gray-100 transition duration-200 text font-semibold text-yellow-600 hover:text-black"
+                        disabled={isLoading}
+                        className="flex items-center justify-center w-full border rounded-lg px-4 py-2 hover:bg-gray-100 transition duration-200 text font-semibold text-yellow-600 hover:text-black disabled:bg-gray-500 disabled:text-gray-300 disabled:cursor-not-allowed"
                     >
                         <i className="fa-brands fa-google mr-2 text-yellow-600 font-semibold hover:text-black"></i>
                         Sign in with Google

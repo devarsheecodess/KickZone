@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'
-import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -11,7 +11,11 @@ const Signup = () => {
     username: '',
     email: '',
     password: '',
+    favPlayer: '',
+    favClub: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [showPassword, setShowPassword] = useState(false);
@@ -22,21 +26,58 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
     try {
-      // Add the id to the form object before sending the request
-      const userForm = { ...form, id: uuidv4() };
+      // Validate form fields
+      if (!form.name || !form.username || !form.email || !form.password) {
+        setError('All fields are required');
+        setIsLoading(false);
+        return;
+      }
 
-      const response = await axios.post(`${BACKEND_URL}/users`, userForm);
-      console.log(response.data);
+      // Create user first
+      const userResponse = await axios.post(`${BACKEND_URL}/users`, {
+        id: form.id,
+        name: form.name,
+        username: form.username,
+        email: form.email,
+        password: form.password
+      });
+      
+      console.log(userResponse.data);
 
-      if (response.status === 201) {
-        alert('User created successfully');
-        setForm({ id: '', name: '', username: '', email: '', password: '' });
+      if (userResponse.status === 201) {
+        // Store the ID
         localStorage.setItem('id', form.id);
-        navigate('/form');
+        localStorage.setItem('user', form.username);
+        
+        // If favorite player and club are provided, save recommendations
+        if (form.favPlayer && form.favClub) {
+          try {
+            const recommendationResponse = await axios.post(`${BACKEND_URL}/recommendations`, {
+              id: uuidv4(),
+              userId: form.id,
+              favPlayer: form.favPlayer,
+              favClub: form.favClub
+            });
+            
+            console.log(recommendationResponse.data);
+          } catch (recErr) {
+            console.error('Error saving recommendations:', recErr);
+            // Continue even if recommendations fail
+          }
+        }
+        
+        alert('User created successfully');
+        setForm({ id: '', name: '', username: '', email: '', password: '', favPlayer: '', favClub: '' });
+        navigate('/home');
       }
     } catch (err) {
       console.error('Error creating user:', err);
+      setError(err.response?.data?.error || err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -110,12 +151,38 @@ const Signup = () => {
               )}
             </button>
           </div>
+          
+          <div>
+            <label className="block text-white">Favorite Footballer (Optional)</label>
+            <input
+              type="text"
+              name="favPlayer"
+              value={form.favPlayer}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500"
+              placeholder="Enter your favorite footballer"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-white">Favorite Football Club (Optional)</label>
+            <input
+              type="text"
+              name="favClub"
+              value={form.favClub}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-blue-500"
+              placeholder="Enter your favorite football club"
+            />
+          </div>
 
+          {error && <p className="text-yellow-300 text-sm mt-2">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-indigo-800 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
+            disabled={isLoading}
+            className="w-full bg-indigo-800 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200 disabled:bg-gray-500 disabled:cursor-not-allowed"
           >
-            Sign Up
+            {isLoading ? 'Signing up...' : 'Sign Up'}
           </button>
 
           <p className="text-center text-white mt-4">

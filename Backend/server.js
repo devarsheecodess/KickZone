@@ -7,6 +7,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cookieSession = require("cookie-session");
 const session = require("express-session");
+const { v4: uuidv4 } = require('uuid'); // For generating unique IDs
 
 
 // CORS
@@ -19,6 +20,12 @@ const Product = require("./Models/Product");
 const Cart = require("./Models/Cart");
 const Orders = require("./Models/Orders");
 const Recommendation = require("./Models/Recommendation");
+
+// Import routes here
+const scraperRoutes = require('./routes/scraperRoutes');
+
+// Use routes here
+app.use('/api/scrape', scraperRoutes);
 
 // dotenv config
 dotenv.config();
@@ -110,21 +117,27 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID, // Google Client ID
       clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Google Client Secret
-      callbackURL: "/auth/google/callback", // Callback URL after Google Auth
+      callbackURL: "http://localhost:5000/auth/google/callback", // Full URL for callback
+      proxy: true, // Handle proxy issues
+      userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo" // Use newer API endpoint
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        // Generate a unique ID for new Google users
+        const userId = uuidv4();
+        
         // Find or create the user in your database
         const user = await User.findOneAndUpdate(
           { googleId: profile.id }, // Match by googleId
           {
             googleId: profile.id, // Update or set googleId
+            id: userId, // Add a unique ID for new users
             name: profile.displayName, // Google profile name
             email: profile.emails[0]?.value, // First email from profile
-            username: profile.emails[0]?.value.split("@")[0], // Generate username from email (example logic)
-            password: "N/A", // No password since this is Google Auth
+            username: profile.emails[0]?.value.split("@")[0], // Generate username from email
+            password: "google-auth", // Placeholder password for Google Auth users
           },
-          { upsert: true, new: true } // Create if not found, return updated document
+          { upsert: true, new: true, setDefaultsOnInsert: true } // Create if not found with defaults
         );
         return done(null, user);
       } catch (error) {
@@ -156,15 +169,15 @@ passport.deserializeUser(async (googleId, done) => {
   }
 });
 
-// Middleware for Cookie Session
+// Middleware for Session - must be before passport initialization
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'kickzone-secret-key',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      secure: false,
+      secure: false, // Set to true in production with HTTPS
     },
   })
 );
@@ -183,17 +196,27 @@ app.get(
 // Route to handle callback after Google Auth
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "https://kick-zone.vercel.app/login" }),
+  passport.authenticate("google", { failureRedirect: "http://localhost:5173/login?error=google_auth_failed" }),
   (req, res) => {
-    req.login(req.user, (err) => {
-      if (err) {
-        console.error("Error during login:", err);
-        return res.status(500).json({ success: false, message: "Login failed" });
+    try {
+      // User is already logged in by passport at this point
+      if (!req.user) {
+        console.error("No user found in request after Google auth");
+        return res.redirect("http://localhost:5173/login?error=no_user_found");
       }
-      // Redirect to the frontend with user details
-      const redirectUrl = `https://kick-zone.vercel.app/home?id=${req.user._id}&username=${req.user.username}`;
+      
+      // Store user data in localStorage via query params for the frontend
+      // Use the id field instead of _id to be consistent with regular login
+      const redirectUrl = `http://localhost:5173/home?id=${req.user.id}&username=${encodeURIComponent(req.user.username)}&googleLogin=true`;
+      
+      // Log successful authentication
+      console.log(`Google auth successful for user: ${req.user.username}`);
+      
       res.redirect(redirectUrl);
-    });
+    } catch (error) {
+      console.error("Error in Google callback:", error);
+      res.redirect("http://localhost:5173/login?error=google_auth_failed");
+    }
   }
 );
 

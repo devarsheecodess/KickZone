@@ -17,6 +17,11 @@ import Community from './components/Page/Community';
 import Quiz from './components/Page/Quiz';
 import LiveChat from './components/Livechat';
 
+// Football API Components
+import Standings from './components/Page/Standings';
+import Players from './components/Page/Players';
+import Fixtures from './components/Page/Fixtures';
+
 // Ecommerce Components
 import EcomHeader from './ecommerce/Header'
 import MainPage from './ecommerce/MainPage'
@@ -33,9 +38,11 @@ const AppRouter = () => (
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/form" element={<Form />} />
 
       {/* Routes with Header */}
+      <Route path="/standings" element={<><Header /><Standings /></>} />
+      <Route path="/players" element={<><Header /><Players /></>} />
+      <Route path="/fixtures" element={<><Header /><Fixtures /></>} />
       <Route
         path="/home"
         element={
@@ -114,13 +121,27 @@ function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const id = localStorage.getItem('id');
+    // Check for query parameters from Google login redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    const username = urlParams.get('username');
+    const googleLogin = urlParams.get('googleLogin');
+    
+    // If redirected from Google login, save the user data to localStorage
+    if (id && username && googleLogin === 'true') {
+      localStorage.setItem('id', id);
+      localStorage.setItem('user', username);
+      // Remove query parameters from URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
+    const storedId = localStorage.getItem('id');
     const currentPath = window.location.pathname;
   
     // Paths that do not require login
     const publicPaths = ['/login', '/signup', '/'];
   
-    if (!id && !publicPaths.includes(currentPath)) {
+    if (!storedId && !publicPaths.includes(currentPath)) {
       alert('Please login to continue');
       window.location.href = '/login';
     }

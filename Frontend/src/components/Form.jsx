@@ -12,6 +12,8 @@ const FavoriteForm = () => {
     favPlayer: '',
     favClub: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -21,21 +23,40 @@ const FavoriteForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    
+    // Validate form fields
+    if (!form.favPlayer || !form.favClub) {
+      setError('Please enter both your favorite player and club');
+      setIsLoading(false);
+      return;
+    }
+    
     try {
-      // Replace with your API endpoint
-      console.log(form)
-      const formData = { ...form, id: uuidv4(), userId: localStorage.getItem('id') }
+      const userId = localStorage.getItem('id');
+      if (!userId) {
+        setError('User ID not found. Please try logging in again.');
+        setIsLoading(false);
+        return;
+      }
+      
+      const formData = { ...form, id: uuidv4(), userId: userId };
 
       const response = await axios.post(`${BACKEND_URL}/recommendations`, formData);
       console.log(response.data);
       if (response.status === 201) {
         alert('Favorites saved successfully');
         setForm({ id: '', userId: '', favPlayer: '', favClub: '' });
-        navigate('/login'); // Navigate to the landing page after saving
-        localStorage.clear();
+        // Don't clear localStorage here as it contains important user data
+        // Redirect directly to home page instead of login
+        navigate('/home');
       }
     } catch (err) {
       console.error('Error saving favorites:', err);
+      setError(err.response?.data?.error || 'Failed to save favorites. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,11 +89,13 @@ const FavoriteForm = () => {
             />
           </div>
 
+          {error && <p className="text-yellow-300 text-sm mt-2">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-indigo-800 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
+            disabled={isLoading}
+            className="w-full bg-indigo-800 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200 disabled:bg-gray-500 disabled:cursor-not-allowed"
           >
-            Save Favorites
+            {isLoading ? 'Saving...' : 'Save Favorites'}
           </button>
         </form>
       </div>
